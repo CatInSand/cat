@@ -1,6 +1,14 @@
 #include <iostream>
 
+#include "test.h"
+
+CATTEST(AlgorithmTest)
+{
+	throw std::runtime_error("something went wrong");
+	return;
+}
+
 int main()
 {
-	std::cout << "Hello, world!\n";
+	cat::test::RunAll();
 }

@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Source files
 set(SOURCES 
     source/main.cpp
-)
+    source/test.cpp)
 set(HEADERS
     PUBLIC ./include
 )
