@@ -12,17 +12,21 @@ namespace cat
 		{
 		}
 
-		std::vector<std::unique_ptr<Test>> gTests{};
+		std::vector<std::unique_ptr<Test>>& GTest()
+		{
+			static std::vector<std::unique_ptr<Test>> gTests{};
+			return gTests;
+		}
 
 		Test* _InternalRegister(std::unique_ptr<Test>&& pTest)
 		{
-			gTests.push_back(std::move(pTest));
-			return gTests.back().get();
+			GTest().push_back(std::move(pTest));
+			return GTest().back().get();
 		}
 		void RunAll()
 		{
 			std::vector<std::string> testsFailed{};
-			const int totalTests{ static_cast<int>(gTests.size()) };
+			const int totalTests{ static_cast<int>(GTest().size()) };
 			int currentTest{ 0 };
 
 			if (totalTests < 1)
@@ -32,7 +36,7 @@ namespace cat
 			}
 
 			std::cout << "\nCAT - - - - Running all tests - - - - \n\n";
-			for (auto& pTest : gTests)
+			for (auto& pTest : GTest())
 			{
 				++currentTest;
 				std::cout << "Running test: \"" << pTest->m_Name << "\" (" << currentTest << "/" << totalTests << ")\n";
