@@ -6,7 +6,9 @@
 
 namespace cat
 {
+	//
 	// - - - - Combinations - - - -
+	//
 	
 	/*
 	Find the first pair of elements that satisfy the predicate
@@ -61,10 +63,14 @@ namespace cat
 		return !any_combinations(first, last, p);
 	}
 
+	//
 	// !Combinations - - - -
+	//
 
 
+	//
 	// - - - - Duplicates - - - - 
+	//
 
 	/*
 	Find the first element that appears more than once
@@ -211,10 +217,14 @@ namespace cat
 		return first;
 	}
 
+	//
 	// !Duplicates - - - -
+	//
 
 
+	//
 	// - - - - Find - - - -
+	//
 
 	/*
 	Find the nth instance of an element that satisfies the predicate (n starts at 1)
@@ -285,11 +295,16 @@ namespace cat
 		return contains_n_if(first, last, count, [&](const T& other) { return val == other; });
 	}
 
-	// !Find - - - - 
+	//
+	// !Find - - - -
+	//
 
 
+	//
 	// - - - - Remove greatest/least - - - -
+	//
 
+	//
 	template<class ForwardIt, class Size>
 	constexpr std::vector<ForwardIt> find_greatest_n(ForwardIt first, ForwardIt last, Size count)
 	{
@@ -306,7 +321,9 @@ namespace cat
 
 	}
 
+	//
 	// !Remove greatest/least - - - -
+	//
 }
 
 #endif
