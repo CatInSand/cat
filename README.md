@@ -5,6 +5,6 @@ This library is a collection of code I personally find useful and plan to use ag
 
 # headers
 
-## algorithm
+## algorithm.h
 
 A collection of STL style algorithms.
