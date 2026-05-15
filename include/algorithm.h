@@ -8,7 +8,9 @@ namespace cat
 {
 	// - - - - Combinations - - - -
 	
-	// return the first pair of elements that satisfy the predicate
+	/*
+	Find the first pair of elements that satisfy the predicate
+	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr std::pair<ForwardIt, ForwardIt> combination_compare(ForwardIt first, ForwardIt last, BinaryPred p)
 	{
@@ -23,7 +25,9 @@ namespace cat
 		return { last, last };
 	}
 
-	// test if all combinations satisfy the predicate
+	/*
+	Test if all combinations satisfy the predicate
+	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool all_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
 	{
@@ -40,13 +44,17 @@ namespace cat
 
 		return true;
 	}
-	// test if any combination satisfies the predicate
+	/*
+	Test if any combination satisfies the predicate
+	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool any_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
 	{
 		return combination_compare(first, last, p).first != last;
 	}
-	// test if no combinations satisfy the predicate
+	/*
+	Test if no combinations satisfy the predicate
+	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool no_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
 	{
@@ -58,13 +66,17 @@ namespace cat
 
 	// - - - - Duplicates - - - - 
 
-	// find the first element that appears more than once
+	/*
+	Find the first element that appears more than once
+	*/
 	template<class ForwardIt>
 	constexpr ForwardIt find_duplicate(ForwardIt first, ForwardIt last)
 	{
 		return combination_compare(first, last, [](auto v1, auto v2) { return v1 == v2; }).first;
 	}
-	// find the first element equal to val that appears more than once
+	/*
+	Find the first element equal to val that appears more than once
+	*/
 	template<class ForwardIt, class T>
 	constexpr ForwardIt find_duplicate(ForwardIt first, ForwardIt last, const T& val)
 	{
@@ -79,13 +91,17 @@ namespace cat
 		return last;
 	}
 
-	// find the latter instance of the first element that appears more than once
+	/*
+	Find the latter instance of the first element that appears more than once
+	*/
 	template<class ForwardIt>
 	constexpr ForwardIt find_late_duplicate(ForwardIt first, ForwardIt last)
 	{
 		return combination_compare(first, last, [](auto v1, auto v2) { return v1 == v2; }).second;
 	}
-	// find the latter instance of the first element equal to val that appears more than once
+	/*
+	Find the latter instance of the first element equal to val that appears more than once
+	*/
 	template<class ForwardIt, class T>
 	constexpr ForwardIt find_late_duplicate(ForwardIt first, ForwardIt last, const T& val)
 	{
@@ -129,7 +145,9 @@ namespace cat
 		return last;
 	}
 
-	// find the first element that appears more than count times
+	/*
+	Find the first element that appears more than count times
+	*/
 	template<class ForwardIt, class Size>
 	constexpr ForwardIt find_n_duplicates(ForwardIt first, ForwardIt last, Size count)
 	{
@@ -141,7 +159,9 @@ namespace cat
 
 		return _find_n_duplicates_recursive(first, last, count);
 	}
-	// find the first element equal to val that appears more than count times
+	/*
+	Find the first element equal to val that appears more than count times
+	*/
 	template<class ForwardIt, class Size, class T>
 	constexpr ForwardIt find_n_duplicates(ForwardIt first, ForwardIt last, Size count, const T& val)
 	{
@@ -154,7 +174,9 @@ namespace cat
 		return _find_n_duplicates_recursive(first, last, count, val);
 	}
 
-	// remove elements that appear more than once (doesn't remove first)
+	/*
+	Remove elements that appear more than once (doesn't remove first)
+	*/
 	template<class ForwardIt>
 	constexpr ForwardIt remove_duplicates(ForwardIt first, ForwardIt last)
 	{
@@ -170,7 +192,9 @@ namespace cat
 
 		return it;
 	}
-	// remove elements equal to val that appear more than once (doesn't remove first)
+	/*
+	Remove elements equal to val that appear more than once (doesn't remove first)
+	*/
 	template<class ForwardIt, class T>
 	constexpr ForwardIt remove_duplicates(ForwardIt first, ForwardIt last, const T& val)
 	{
@@ -192,7 +216,9 @@ namespace cat
 
 	// - - - - Find - - - -
 
-	// find the nth instance of an element that satisfies the predicate (n starts at 1)
+	/*
+	Find the nth instance of an element that satisfies the predicate (n starts at 1)
+	*/
 	template<class ForwardIt, class Size, class UnaryPred>
 	constexpr ForwardIt find_nth_if(ForwardIt first, ForwardIt last, Size count, const UnaryPred& pred)
 	{
@@ -207,14 +233,18 @@ namespace cat
 		return last;
 	}
 
-	// find the nth instance of an element equal to val (n starts at 1)
+	/*
+	Find the nth instance of an element equal to val (n starts at 1)
+	*/
 	template<class ForwardIt, class Size, class T>
 	constexpr ForwardIt find_nth(ForwardIt first, ForwardIt last, Size count, const T& val)
 	{
 		return find_nth_if(first, last, count, [&](const T& other) { return val == other; });
 	}
 
-	// find the first n elements that satisfy the predicate
+	/*
+	Find the first n elements that satisfy the predicate
+	*/
 	template<class ForwardIt, class Size, class UnaryPred>
 	constexpr std::vector<ForwardIt> find_n_if(ForwardIt first, ForwardIt last, Size count, const UnaryPred& pred)
 	{
@@ -237,14 +267,18 @@ namespace cat
 		return result;
 	}
 
-	// test if at least n elements satisfy the predicate
+	/*
+	Test if at least n elements satisfy the predicate
+	*/
 	template<class ForwardIt, class Size, class UnaryPred>
 	constexpr bool contains_n_if(ForwardIt first, ForwardIt last, Size count, const UnaryPred& pred)
 	{
 		return find_nth_if(first, last, count, pred) != last;
 	}
 
-	// test if at least n elements eqaul to val
+	/*
+	Test if at least n elements eqaul to val
+	*/
 	template<class ForwardIt, class Size, class T>
 	constexpr bool contains_n(ForwardIt first, ForwardIt last, Size count, const T& val)
 	{
@@ -264,7 +298,7 @@ namespace cat
 		return result;
 	}
 
-	// find the first n elements that satisfy the predicate
+	//
 	template<class ForwardIt, class Size>
 	constexpr ForwardIt remove_greatest_n(ForwardIt first, ForwardIt last, Size count)
 	{
