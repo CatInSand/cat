@@ -44,8 +44,50 @@ CATTEST(AlgorithmRemoveDuplicatesTest)
 	}
 }
 
-CATTEST(BaseTest)
+CATTEST(CombinationAllAnyNoTest)
 {
+	TestLists testLists{};
+
+	auto binaryPredicate{
+		[](const float& v1, const float& v2) { return v1 + 1 >= v2; }
+	};
+
+	for (auto& list : testLists.lists)
+	{
+		bool allCombinations{ cat::all_combinations(list.begin(), list.end(), binaryPredicate) };
+		bool anyCombinations{ cat::any_combinations(list.begin(), list.end(), binaryPredicate) };
+		bool noCombinations{ cat::no_combinations(list.begin(), list.end(), binaryPredicate) };
+
+		if (list.size() == 0)
+		{
+			if(allCombinations != true || anyCombinations != false || noCombinations != true)
+				throw std::runtime_error("incorrect for empty list");
+
+			continue;
+		}
+
+		if (allCombinations)
+		{
+			if(!anyCombinations)
+				throw std::runtime_error("all_combinations true and any_combinations false");
+
+			if (noCombinations)
+				throw std::runtime_error("all_combinations true and no_combinations true");
+		}
+		else if (anyCombinations)
+		{
+			if (noCombinations)
+				throw std::runtime_error("any_combinations true and no_combinations true");
+		}
+		else if(noCombinations)
+		{
+			// nothing left to check
+		}
+		else
+		{
+			throw std::runtime_error("all_, any_, and no_combinations all false");
+		}
+	}
 }
 
 int main()
