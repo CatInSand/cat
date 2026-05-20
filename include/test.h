@@ -18,15 +18,15 @@ namespace cat
 
 		protected:
 			Test(const std::string& name);
+
+			static Test* _InternalRegister(std::unique_ptr<Test>&& pTest);
+
+			template<typename T>
+			static T* Register()
+			{
+				return dynamic_cast<T*>(_InternalRegister(std::make_unique<T>()));
+			}
 		};
-
-		Test* _InternalRegister(std::unique_ptr<Test>&& pTest);
-
-		template<typename T>
-		T* Register()
-		{
-			return dynamic_cast<T*>(_InternalRegister(std::make_unique<T>()));
-		}
 
 		void RunAll();
 	}
