@@ -5,14 +5,42 @@
 
 #include <vector>
 
+struct TestLists
+{
+	std::vector<std::vector<float>> lists{
+		{ 0.f, 1.2f, 17.651f, 7.f, -19.f, -0.256f, 1.2f, 0.5f, 0.5f, -17.651f },	// duplicates
+		{ 0.f, 1.2f, 17.651f, 7.f, -19.f, -0.256f, 0.5f, -17.651f },				// no duplicates
+		{ 0.f, 1.2f, 17.651f, 0.f, 7.f, 0.f,-19.f, -0.256f, 0.5f, 0.f,-17.651f },	// four of a kind
+		{},																			// empty
+	};
+};
+
 CATTEST(AlgorithmRemoveDuplicatesTest)
 {
-	std::vector<float> numbers{ 0.f, 1.2f, 17.651f, 7.f, -19.f, -0.256f, 1.2f, 0.5f, 0.5f, -17.651f };
+	TestLists testLists{};
 
-	numbers.erase(cat::remove_duplicates(numbers.begin(), numbers.end()), numbers.end());
-	if (cat::any_combinations(numbers.begin(), numbers.end(), [](const float& v1, const float& v2) { return v1 == v2; }))
+	for (auto& list : testLists.lists)
 	{
-		throw std::runtime_error("Vector still contains duplicates");
+		list.erase(cat::remove_duplicates(list.begin(), list.end()), list.end());
+
+		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
+			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
+				if (*it1 == *it2)
+					throw std::runtime_error("list contains duplicates after calling remove_duplicates");
+	}
+
+	testLists = {};
+
+	constexpr float testValue{ 0.f };
+
+	for (auto& list : testLists.lists)
+	{
+		list.erase(cat::remove_duplicates(list.begin(), list.end(), testValue), list.end());
+
+		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
+			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
+				if (*it1 == *it2 && *it1 == testValue)
+					throw std::runtime_error("list contains duplicates after calling remove_duplicates for specific value");
 	}
 }
 
