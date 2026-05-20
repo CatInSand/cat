@@ -26,3 +26,11 @@ target_include_directories(${PROJECT_NAME} ${HEADERS})
 
 # Link to test executable
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${PROJECT_NAME})
+
+# Set warning level
+if(MSVC)
+  # compile at warning level 4 + treat warnings as errors
+  target_compile_options(${EXECUTABLE_NAME} PRIVATE /W4 /WX)
+else()
+  target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall -Wextra -Werror)
+endif()
