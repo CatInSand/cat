@@ -98,6 +98,23 @@ namespace cat
 	}
 
 	/*
+	test if any elements appear more than once
+	*/
+	template<class ForwardIt>
+	constexpr bool has_duplicate(ForwardIt first, ForwardIt last)
+	{
+		return find_duplicate(first, last) != last;
+	}
+	/*
+	test if any elements equal to val appear more than once
+	*/
+	template<class ForwardIt, class T>
+	constexpr bool has_duplicate(ForwardIt first, ForwardIt last, const T& val)
+	{
+		return find_duplicate(first, last, val) != last;
+	}
+
+	/*
 	Find the latter instance of the first element that appears more than once
 	*/
 	template<class ForwardIt>
