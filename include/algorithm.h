@@ -28,7 +28,7 @@ namespace cat
 	}
 
 	/*
-	Test if all combinations satisfy the predicate
+	Test if all pairs of elements satisfy the predicate
 	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool all_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
@@ -47,7 +47,7 @@ namespace cat
 		return true;
 	}
 	/*
-	Test if any combination satisfies the predicate
+	Test if any pair of elements satisfies the predicate
 	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool any_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
@@ -55,7 +55,7 @@ namespace cat
 		return combination_compare(first, last, p).first != last;
 	}
 	/*
-	Test if no combinations satisfy the predicate
+	Test if no pairs of elements satisfy the predicate
 	*/
 	template<class ForwardIt, class BinaryPred>
 	constexpr bool no_combinations(ForwardIt first, ForwardIt last, BinaryPred p)
@@ -297,32 +297,6 @@ namespace cat
 
 	//
 	// !Find - - - -
-	//
-
-
-	//
-	// - - - - Remove greatest/least - - - -
-	//
-
-	//
-	template<class ForwardIt, class Size>
-	constexpr std::vector<ForwardIt> find_greatest_n(ForwardIt first, ForwardIt last, Size count)
-	{
-		std::vector<ForwardIt> result;
-
-		return result;
-	}
-
-	//
-	template<class ForwardIt, class Size>
-	constexpr ForwardIt remove_greatest_n(ForwardIt first, ForwardIt last, Size count)
-	{
-		std::vector<ForwardIt> greatest{ find_greatest_n(first, last, count) };
-
-	}
-
-	//
-	// !Remove greatest/least - - - -
 	//
 }
 
