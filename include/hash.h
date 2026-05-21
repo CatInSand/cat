@@ -1,7 +1,6 @@
 #ifndef CAT_HASH_H
 #define CAT_HASH_H
 
-#include <cassert>
 #include <string>
 
 namespace cat
