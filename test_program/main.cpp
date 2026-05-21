@@ -1,9 +1,10 @@
 #include <iostream>
+#include <vector>
+#include <format>
 
 #include "test.h"
 #include "algorithm.h"
-
-#include <vector>
+#include "hash.h"
 
 struct TestLists
 {
@@ -88,6 +89,41 @@ CATTEST(CombinationAllAnyNoTest)
 			throw std::runtime_error("all_, any_, and no_combinations all false");
 		}
 	}
+}
+
+using namespace cat::hash_literals;
+
+std::string GenerateString(uint32_t size)
+{
+	std::string result{};
+
+	for (uint32_t index{ 0 }; index < size; ++index)
+	{
+		result.push_back(' ' + rand() % ('~' - ' '));
+	}
+
+	return result;
+}
+
+CATTEST(HashCollisionsTest)
+{
+	constexpr int stringCount{ 1000 };
+	std::vector<std::string> stringList{ stringCount };
+
+	for (int index{ 0 }; index < stringCount; ++index)
+	{
+		stringList.push_back(GenerateString(rand() % 10 + 1));
+	}
+
+	//duplicate strings would create duplicate hashes
+	stringList.erase(cat::remove_duplicates(stringList.begin(), stringList.end()), stringList.end());
+
+	auto it_pair{ cat::combination_compare(stringList.begin(), stringList.end(),
+		[](const std::string& v1, const std::string& v2) { return cat::sdbm_hash(v1) == cat::sdbm_hash(v2); })
+	};
+
+	if (it_pair.first != stringList.end())
+		throw std::runtime_error(std::format("Hash collision with only {} strings", stringCount));
 }
 
 int main()
