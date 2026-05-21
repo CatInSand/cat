@@ -108,11 +108,12 @@ std::string GenerateString(uint32_t size)
 CATTEST(HashCollisionsTest)
 {
 	constexpr int stringCount{ 1000 };
+	constexpr int maxStringLength{ 10 };
 	std::vector<std::string> stringList{ stringCount };
 
 	for (int index{ 0 }; index < stringCount; ++index)
 	{
-		stringList.push_back(GenerateString(rand() % 10 + 1));
+		stringList.push_back(GenerateString(rand() % maxStringLength + 1));
 	}
 
 	//duplicate strings would create duplicate hashes
@@ -124,6 +125,31 @@ CATTEST(HashCollisionsTest)
 
 	if (it_pair.first != stringList.end())
 		throw std::runtime_error(std::format("Hash collision with only {} strings", stringCount));
+}
+
+CATTEST(HashEqualityTest)
+{
+	constexpr int stringCount{ 1000 };
+	constexpr int maxStringLength{ 5 };
+	std::vector<std::string> stringList{ stringCount };
+
+	for (int index{ 0 }; index < stringCount; ++index)
+	{
+		stringList.push_back(GenerateString(rand() % maxStringLength + 1));
+	}
+
+	if (!cat::has_duplicate(stringList.begin(), stringList.end()))
+		throw std::runtime_error("Test failed to create duplicate strings");
+
+	auto it_pair{ cat::combination_compare(stringList.begin(), stringList.end(),
+		[](const std::string& v1, const std::string& v2)
+		{ 
+			return v1 == v2 && cat::sdbm_hash(v1) != cat::sdbm_hash(v2);
+		})
+	};
+
+	if (it_pair.first != stringList.end())
+		throw std::runtime_error("Two equal strings did not have equal hashes");
 }
 
 int main()
