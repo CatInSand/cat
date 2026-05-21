@@ -44,7 +44,6 @@ CATTEST(AlgorithmRemoveDuplicatesTest)
 					throw std::runtime_error("list contains duplicates after calling remove_duplicates for specific value");
 	}
 }
-
 CATTEST(CombinationAllAnyNoTest)
 {
 	TestLists testLists{};
@@ -91,7 +90,6 @@ CATTEST(CombinationAllAnyNoTest)
 	}
 }
 
-using namespace cat::hash_literals;
 
 std::string GenerateString(uint32_t size)
 {
@@ -126,7 +124,6 @@ CATTEST(HashCollisionsTest)
 	if (it_pair.first != stringList.end())
 		throw std::runtime_error(std::format("Hash collision with only {} strings", stringCount));
 }
-
 CATTEST(HashEqualityTest)
 {
 	constexpr int stringCount{ 1000 };
@@ -150,6 +147,27 @@ CATTEST(HashEqualityTest)
 
 	if (it_pair.first != stringList.end())
 		throw std::runtime_error("Two equal strings did not have equal hashes");
+}
+
+using namespace cat::hash_literals;
+
+CATTEST(HashLiteralTest)
+{
+	std::vector<cat::hash_t> hashes{
+		"cats"_h,
+		"are"_h,
+		"pretty"_h,
+		"cool"_h
+	};
+
+	if (hashes[0] != cat::sdbm_hash("cats")
+		|| hashes[1] != cat::sdbm_hash("are")
+		|| hashes[2] != cat::sdbm_hash("pretty")
+		|| hashes[3] != cat::sdbm_hash("cool")
+		)
+	{
+		throw std::runtime_error("hash literal not equal to sdbm_hash");
+	}
 }
 
 int main()
