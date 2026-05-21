@@ -14,7 +14,7 @@ namespace cat
 	/*
 	Creates a hash from a c_string using the sdbm hash
 	*/
-	consteval hash_t sdbm_hash(const char* string, size_t length)
+	constexpr hash_t sdbm_hash(const char* string, size_t length)
 	{
 		hash_t result{ 0 };
 
@@ -29,7 +29,7 @@ namespace cat
 	/*
 	Creates a hash from a string using the sdbm hash
 	*/
-	consteval hash_t sdbm_hash(const std::string& string)
+	constexpr hash_t sdbm_hash(const std::string& string)
 	{
 		return sdbm_hash(string.c_str(), string.size());
 	}
