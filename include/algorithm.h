@@ -1,5 +1,5 @@
-#ifndef CAT_ALGORITHMS_H
-#define CAT_ALGORITHMS_H
+#ifndef CAT_ALGORITHM_H
+#define CAT_ALGORITHM_H
 
 #include <algorithm>
 #include <vector>
