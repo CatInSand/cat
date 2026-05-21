@@ -16,7 +16,7 @@ struct TestLists
 	};
 };
 
-CATTEST(AlgorithmRemoveDuplicatesTest)
+CATTEST(Algorithms, RemoveDuplicatesTest)
 {
 	TestLists testLists{};
 
@@ -44,7 +44,7 @@ CATTEST(AlgorithmRemoveDuplicatesTest)
 					throw std::runtime_error("list contains duplicates after calling remove_duplicates for specific value");
 	}
 }
-CATTEST(CombinationAllAnyNoTest)
+CATTEST(Algorithms, CombinationAllAnyNoTest)
 {
 	TestLists testLists{};
 
@@ -103,7 +103,7 @@ std::string GenerateString(uint32_t size)
 	return result;
 }
 
-CATTEST(HashCollisionsTest)
+CATTEST(Hashing, CollisionsTest)
 {
 	constexpr int stringCount{ 1000 };
 	constexpr int maxStringLength{ 10 };
@@ -124,7 +124,7 @@ CATTEST(HashCollisionsTest)
 	if (it_pair.first != stringList.end())
 		throw std::runtime_error(std::format("Hash collision with only {} strings", stringCount));
 }
-CATTEST(HashEqualityTest)
+CATTEST(Hashing, EqualityTest)
 {
 	constexpr int stringCount{ 1000 };
 	constexpr int maxStringLength{ 5 };
@@ -151,7 +151,7 @@ CATTEST(HashEqualityTest)
 
 using namespace cat::hash_literals;
 
-CATTEST(HashLiteralTest)
+CATTEST(Hashing, LiteralTest)
 {
 	std::vector<cat::hash_t> hashes{
 		"cats"_h,

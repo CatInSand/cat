@@ -8,18 +8,19 @@ namespace cat
 {
 	namespace test
 	{
-		class Test
+		class _Test
 		{
 		public:
-			virtual ~Test() = default;
-			virtual void Run() = 0;
+			virtual ~_Test() = default;
+			virtual void Run() const = 0;
 
 			const std::string m_Name;
+			const std::string m_SuiteName;
 
 		protected:
-			Test(const std::string& name);
+			_Test(const std::string& name, const std::string& suiteName);
 
-			static Test* _InternalRegister(std::unique_ptr<Test>&& pTest);
+			static _Test* _InternalRegister(std::unique_ptr<_Test>&& pTest);
 
 			template<typename T>
 			static T* Register()
@@ -32,19 +33,19 @@ namespace cat
 	}
 }
 
-#define CATTEST(test_name)													\
-namespace cat { namespace test { namespace _prepro_names {					\
-class test_name final : public Test											\
-{																			\
-public:																		\
-	test_name() : Test(#test_name) {}										\
-	virtual ~test_name() = default;											\
-	virtual void Run() override;											\
-	static test_name* m_pInstance;											\
-};																			\
-test_name* test_name::m_pInstance{ Register<test_name>() };					\
-}}}																			\
-void cat::test::_prepro_names::test_name::Run()
-
+#define CATTEST(test_suite, test_name)												\
+namespace cat { namespace test { namespace _prepro_names { namespace test_suite	{	\
+class test_name final : public _Test												\
+{																					\
+public:																				\
+	test_name() : _Test(#test_name, #test_suite) {}									\
+	virtual ~test_name() = default;													\
+	virtual void Run() const override;												\
+private:																			\
+	static test_name* m_pInstance;													\
+};																					\
+test_name* test_name::m_pInstance{ Register<test_name>() };							\
+}}}}																				\
+void cat::test::_prepro_names::test_suite::test_name::Run() const
 
 #endif
