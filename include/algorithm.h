@@ -252,10 +252,10 @@ namespace cat
 		if (first == last || count <= 0)
 			return last;
 
-		for (Size index{ 0 }; first != last; ++first)
-			if (pred(*first))
-				if (++index == count)
-					return first;
+		first = std::find_if(first, last, pred);
+		for (Size index{ 0 }; first != last; first = std::find_if(first, last, pred))
+			if (++index == count)
+				return first;
 
 		return last;
 	}
@@ -266,7 +266,15 @@ namespace cat
 	template<class ForwardIt, class Size, class T>
 	constexpr ForwardIt find_nth(ForwardIt first, ForwardIt last, Size count, const T& val)
 	{
-		return find_nth_if(first, last, count, [&](const T& other) { return val == other; });
+		if (first == last || count <= 0)
+			return last;
+
+		first = std::find_if(first, last, val);
+		for (Size index{ 0 }; first != last; first = std::find(first, last, val))
+			if (++index == count)
+				return first;
+
+		return last;
 	}
 
 	/*
