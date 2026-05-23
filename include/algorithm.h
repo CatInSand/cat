@@ -310,7 +310,7 @@ namespace cat
 	{
 		std::vector<ForwardIt> result{};
 
-		if (first == last || count <= 0)
+		if (first == last)
 			return result;
 
 		for (; first != last; ++first)

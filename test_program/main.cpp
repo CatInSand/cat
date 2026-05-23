@@ -163,7 +163,7 @@ CATTEST(Algorithms, FindNthIfTest)
 		++index;
 	}
 }
-CATTEST(Algorithms, FindNIfTest)
+CATTEST(Algorithms, FindNAllIfTest)
 {
 	TestLists testLists{};
 	int index{ 0 };
@@ -171,9 +171,26 @@ CATTEST(Algorithms, FindNIfTest)
 	for (auto& list : testLists.lists)
 	{
 		auto vec{ cat::find_n_if(list.begin(), list.end(), 4, [](const float& v) { return v >= 1.f; }) };
+		auto vec2{ cat::find_all_if(list.begin(), list.end(), [](const float& v) { return v >= 1.f; }) };
+
+		if (vec != vec2)
+			throw std::runtime_error("find_n_if with n = 4 different from find_all_if");
 
 		++index;
 	}
+}
+CATTEST(Algorithms, ContainsNIfTest)
+{
+	TestLists testLists{};
+	
+	if (!cat::contains_n_if(testLists.lists[0].begin(), testLists.lists[0].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (!cat::contains_n_if(testLists.lists[1].begin(), testLists.lists[1].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (!cat::contains_n_if(testLists.lists[2].begin(), testLists.lists[2].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (cat::contains_n_if(testLists.lists[3].begin(), testLists.lists[3].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
 }
 
 std::string GenerateString(uint32_t size)
