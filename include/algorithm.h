@@ -305,8 +305,8 @@ namespace cat
 	/*
 	Find the first all elements that satisfy the predicate
 	*/
-	template<class ForwardIt, class Size, class UnaryPred>
-	constexpr std::vector<ForwardIt> find_all_if(ForwardIt first, ForwardIt last, Size count, const UnaryPred& pred)
+	template<class ForwardIt, class UnaryPred>
+	constexpr std::vector<ForwardIt> find_all_if(ForwardIt first, ForwardIt last, const UnaryPred& pred)
 	{
 		std::vector<ForwardIt> result{};
 
