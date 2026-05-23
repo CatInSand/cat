@@ -47,6 +47,8 @@ find_nth: Takes a count n and a value and returns the nth element equal to the v
 
 find_n_if: Takes a count n and a predicate and returns the first n elements that satisfy the predicate as a std::vector.
 
+find_all_if: Takes a predicate and returns the all elements that satisfy the predicate as a std::vector.
+
 contains_n_if: Takes a count n and a predicate and returns true if it contains n or more elements that satisfy the predicate.
 
 contains_n: Takes a count n and a value and returns true if it contains n or more elements equal to the value.
