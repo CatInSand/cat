@@ -169,7 +169,7 @@ namespace cat
 	}
 
 	/*
-	Find the first element that appears more than count times
+	Find the first element that appears count times or more
 	*/
 	template<class ForwardIt, class Size>
 	constexpr ForwardIt find_n_duplicates(ForwardIt first, ForwardIt last, Size count)
@@ -183,7 +183,7 @@ namespace cat
 		return _find_n_duplicates_recursive(first, last, count);
 	}
 	/*
-	Find the first element equal to val that appears more than count times
+	Find the first element equal to val that appears count times or more
 	*/
 	template<class ForwardIt, class Size, class T>
 	constexpr ForwardIt find_n_duplicates(ForwardIt first, ForwardIt last, Size count, const T& val)
@@ -198,7 +198,7 @@ namespace cat
 	}
 
 	/*
-	Remove elements that appear more than once (doesn't remove first)
+	Remove duplicates of elements already found in the list
 	*/
 	template<class ForwardIt>
 	constexpr ForwardIt remove_duplicates(ForwardIt first, ForwardIt last)
@@ -216,7 +216,7 @@ namespace cat
 		return it;
 	}
 	/*
-	Remove elements equal to val that appear more than once (doesn't remove first)
+	Remove duplicates of elements equal to val already found in the list
 	*/
 	template<class ForwardIt, class T>
 	constexpr ForwardIt remove_duplicates(ForwardIt first, ForwardIt last, const T& val)
