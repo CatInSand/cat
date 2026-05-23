@@ -24,6 +24,7 @@ any_combinations: Takes a binary predicate and returns true if any pair of eleme
 no_combinations: Takes a binary predicate and returns true if no pair of elements satisfies the predicate.
 
 
+
 ### Duplicates algorithms
 
 All duplicates algorithms have an overload that takes a value and only tests for duplicates equal to that value.
@@ -39,6 +40,7 @@ find_n_duplicates: Takes a count and returns the first element that appears coun
 remove_duplicates: Removes duplicate elements.
 
 
+
 ### Find algorithms
 
 find_nth_if: Takes a count n and a predicate and returns the nth element that satisfies the predicate.
@@ -52,6 +54,7 @@ find_all_if: Takes a predicate and returns the all elements that satisfy the pre
 contains_n_if: Takes a count n and a predicate and returns true if it contains n or more elements that satisfy the predicate.
 
 contains_n: Takes a count n and a value and returns true if it contains n or more elements equal to the value.
+
 
 
 ## hash.h
