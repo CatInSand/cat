@@ -9,65 +9,72 @@ namespace cat
 {
 	namespace test
 	{
-		using tests_type = std::unordered_map<std::string, std::vector<std::unique_ptr<_Test>>>;
+		using suite_t = std::vector<std::unique_ptr<_test_t>>;
 
-		_Test::_Test(const std::string& name, const std::string& suiteName)
-			: m_Name{ name }
-			, m_SuiteName{ suiteName }
+		std::unordered_map<std::string, suite_t>& SuiteMap()
 		{
+			static std::unordered_map<std::string, suite_t> suiteList{};
+			return suiteList;
 		}
 
-		tests_type& TestsInstance()
+		_test_t::_test_t(const std::string& name)
+			: m_name{ name }
 		{
-			static tests_type gTests{};
-			return gTests;
+		}
+		void _test_t::InternalRegister(std::unique_ptr<_test_t>&& pTest, const std::string& suiteName)
+		{
+			SuiteMap()[suiteName].push_back(std::move(pTest));
 		}
 
-		_Test* _Test::_InternalRegister(std::unique_ptr<_Test>&& pTest)
+		std::vector<std::pair<std::string, std::string>> FailedTests()
 		{
-			TestsInstance()[pTest->m_SuiteName].push_back(std::move(pTest));
-			return nullptr;
-		}
+			std::vector<std::pair<std::string, std::string>> failedTests{};
 
-		void RunTest(const std::unique_ptr<_Test>& pTest, int currentTest, int totalTests, std::vector<_Test*>& testsFailed)
+			for (const auto& [suiteName, suite] : SuiteMap())
+			{
+				for (const auto& pTest : suite)
+				{
+					if (!pTest->m_succeeded)
+					{
+						failedTests.push_back({ suiteName, pTest->m_name });
+					}
+				}
+			}
+
+			return failedTests;
+		}
+		void RunTest(const std::unique_ptr<_test_t>& pTest, uint32_t currentTest, uint32_t totalTests)
 		{
-			std::cout << "\"" << pTest->m_Name << "\" (" << currentTest << "/" << totalTests << "): ";
+			std::cout << "\"" << pTest->m_name << "\" (" << currentTest << "/" << totalTests << "): ";
 			try
 			{
-				pTest->Run();
+				pTest->run();
+				pTest->m_succeeded = true;
 				std::cout << "[SUCCESS]\n";
 			}
 			catch (const std::exception& e)
 			{
-				testsFailed.push_back(pTest.get());
 				std::cout << "[FAILED]\n";
-				std::cout << "\t\EXCEPTION THROWN!: " << e.what() << "\n";
+				std::cout << "\tEXCEPTION THROWN!: " << e.what() << "\n";
 			}
 		}
-		void RunTestSuite(const std::string& suiteName, std::vector<_Test*>& testsFailed)
+		void RunTestSuite(const suite_t& suite, const std::string& suiteName)
 		{
-			const int totalTests{ static_cast<int>(TestsInstance().at(suiteName).size()) };
-			int currentTest{ 0 };
+			const uint32_t totalTests{ static_cast<uint32_t>(suite.size()) };
+			uint32_t currentTest{ 0 };
 
 			std::cout << "\n";
 			std::cout << "Running suite: \"" << suiteName << "\" (" << currentTest << "/" << totalTests << ")\n\n";
-			for (const auto& pTest : TestsInstance().at(suiteName))
+			for (const std::unique_ptr<_test_t>& pTest : suite)
 			{
 				++currentTest;
-				RunTest(pTest, currentTest, totalTests, testsFailed);
+				RunTest(pTest, currentTest, totalTests);
 			}
 			std::cout << "\n";
 		}
-		void RunAll()
+		void run_all()
 		{
-			std::vector<_Test*> testsFailed{};
-			int totalTests{ 0 };
-			for (const auto& [suiteName, suite] : TestsInstance())
-			{
-				totalTests += suite.size();
-			}
-
-			if (TestsInstance().size() < 1)
+			if (SuiteMap().size() < 1)
 			{
 				std::cout << "\n- - - - - - - - - - - - - - - - - -\n";
 				std::cout << "CAT - - - - No tests to run - - - -\n";
@@ -75,25 +82,34 @@ namespace cat
 				return;
 			}
 
+			uint32_t totalTestCount{ 0 };
+			for (const auto& [suiteName, suite] : SuiteMap())
+			{
+				totalTestCount += suite.size();
+			}
+
 			std::cout << "\n- - - - - - - - - - - - - - - - - - -\n";
 			std::cout << "CAT - - - - Running all tests - - - -\n";
 			std::cout << "- - - - - - - - - - - - - - - - - - -\n\n";
-			for (const auto& [suiteName, suite] : TestsInstance())
+			for (const auto& [suiteName, suite] : SuiteMap())
 			{
-				RunTestSuite(suiteName, testsFailed);
+				RunTestSuite(suite, suiteName);
 			}
 
 			std::cout << "- - - - - - - - - - - - - - - - - - -\n\n";
-			if (testsFailed.empty())
+
+			auto failedTests{ FailedTests() };
+			if (failedTests.empty())
 			{
 				std::cout << "All tests succeeded\n";
 			}
 			else
 			{
-				std::cout << "Tests failed (" << testsFailed.size() << "/" << totalTests << ")\n";
-				for (_Test* pTest : testsFailed)
+				std::cout << "Tests failed (" << failedTests.size() << "/" << totalTestCount << ")\n";
+
+				for (const auto& [suiteName, name] : failedTests)
 				{
-					std::cout << "Suite: \"" << pTest->m_SuiteName << "\", test: \"" << pTest->m_Name << "\"\n";
+					std::cout << "Suite: \"" << suiteName << "\", test: \"" << name << "\"\n";
 				}
 			}
 			std::cout << "\n\n- - - - - - - - - - - - - - - - - -\n";

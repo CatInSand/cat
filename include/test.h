@@ -8,44 +8,47 @@ namespace cat
 {
 	namespace test
 	{
-		class _Test
+		using _troll_t = uint8_t;
+
+		class _test_t
 		{
 		public:
-			virtual ~_Test() = default;
-			virtual void Run() const = 0;
+			virtual ~_test_t() = default;
+			virtual void run() const = 0;
 
-			const std::string m_Name;
-			const std::string m_SuiteName;
+			const std::string m_name;
+			bool m_succeeded{ false };
 
 		protected:
-			_Test(const std::string& name, const std::string& suiteName);
+			_test_t(const std::string& name);
 
-			static _Test* _InternalRegister(std::unique_ptr<_Test>&& pTest);
+			static void InternalRegister(std::unique_ptr<_test_t>&& pTest, const std::string& suiteName);
 
 			template<typename T>
-			static T* Register()
+			static _troll_t Register(const std::string& suiteName)
 			{
-				return dynamic_cast<T*>(_InternalRegister(std::make_unique<T>()));
+				InternalRegister(std::make_unique<T>(), suiteName);
+				return _troll_t{};
 			}
 		};
 
-		void RunAll();
+		void run_all();
 	}
 }
 
-#define CATTEST(test_suite, test_name)												\
-namespace cat { namespace test { namespace _prepro_names { namespace test_suite	{	\
-class test_name final : public _Test												\
+#define CATTEST(suite_name, test_name)												\
+namespace cat { namespace test { namespace _prepro_names { namespace suite_name	{	\
+class test_name final : public _test_t												\
 {																					\
 public:																				\
-	test_name() : _Test(#test_name, #test_suite) {}									\
+	test_name() : _test_t(#test_name) {}											\
 	virtual ~test_name() = default;													\
-	virtual void Run() const override;												\
+	virtual void run() const override;												\
 private:																			\
-	static test_name* m_pInstance;													\
+	static _troll_t m_troll;														\
 };																					\
-test_name* test_name::m_pInstance{ Register<test_name>() };							\
+_troll_t test_name::m_troll{ Register<test_name>(#suite_name) };					\
 }}}}																				\
-void cat::test::_prepro_names::test_suite::test_name::Run() const
+void cat::test::_prepro_names::suite_name::test_name::run() const
 
 #endif

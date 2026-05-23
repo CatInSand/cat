@@ -172,5 +172,5 @@ CATTEST(Hashing, LiteralTest)
 
 int main()
 {
-	cat::test::RunAll();
+	cat::test::run_all();
 }
