@@ -146,7 +146,7 @@ namespace cat
 		else
 			for (ForwardIt next{}; first != last - count + 1; ++first)
 			{
-				next = _find_x_duplicates_core(first + 1, last, count - 1);
+				next = _find_n_duplicates_recursive(first + 1, last, count - 1);
 				if (next == last)
 					return last;
 				if (*first == *next)
@@ -162,7 +162,7 @@ namespace cat
 			return find_duplicate(first, last, val);
 
 		auto it{ std::find(first, last, val) };
-		if (_find_x_duplicates_core(it + 1, last, count - 1, val) != last)
+		if (_find_n_duplicates_recursive(it + 1, last, count - 1, val) != last)
 			return it;
 
 		return last;
@@ -269,7 +269,7 @@ namespace cat
 		if (first == last || count <= 0)
 			return last;
 
-		first = std::find_if(first, last, val);
+		first = std::find(first, last, val);
 		for (Size index{ 0 }; first != last; first = std::find(first, last, val))
 			if (++index == count)
 				return first;
@@ -298,6 +298,24 @@ namespace cat
 					return result;
 			}
 		}
+
+		return result;
+	}
+
+	/*
+	Find the first all elements that satisfy the predicate
+	*/
+	template<class ForwardIt, class UnaryPred>
+	constexpr std::vector<ForwardIt> find_all_if(ForwardIt first, ForwardIt last, const UnaryPred& pred)
+	{
+		std::vector<ForwardIt> result{};
+
+		if (first == last)
+			return result;
+
+		for (; first != last; ++first)
+			if (pred(*first))
+				result.push_back(first);
 
 		return result;
 	}

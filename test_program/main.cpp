@@ -16,34 +16,6 @@ struct TestLists
 	};
 };
 
-CATTEST(Algorithms, RemoveDuplicatesTest)
-{
-	TestLists testLists{};
-
-	for (auto& list : testLists.lists)
-	{
-		list.erase(cat::remove_duplicates(list.begin(), list.end()), list.end());
-
-		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
-			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
-				if (*it1 == *it2)
-					throw std::runtime_error("list contains duplicates after calling remove_duplicates");
-	}
-
-	testLists = {};
-
-	constexpr float testValue{ 0.f };
-
-	for (auto& list : testLists.lists)
-	{
-		list.erase(cat::remove_duplicates(list.begin(), list.end(), testValue), list.end());
-
-		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
-			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
-				if (*it1 == *it2 && *it1 == testValue)
-					throw std::runtime_error("list contains duplicates after calling remove_duplicates for specific value");
-	}
-}
 CATTEST(Algorithms, CombinationAllAnyNoTest)
 {
 	TestLists testLists{};
@@ -89,7 +61,137 @@ CATTEST(Algorithms, CombinationAllAnyNoTest)
 		}
 	}
 }
+CATTEST(Algorithms, FindDuplicateTest)
+{
+	TestLists testLists{};
+	int index{ 0 };
 
+	for (auto& list : testLists.lists)
+	{
+		auto it{ cat::find_duplicate(list.begin(), list.end()) };
+		if (it != list.end())
+		{
+			if (it != std::find(list.begin(), list.end(), *it))
+				throw std::runtime_error("find_duplicate did not find first element");
+			if(!cat::has_duplicate(list.begin(), list.end()))
+				throw std::runtime_error("find_duplicate returned iterator while has_duplicate returned false");
+			if(index == 1 || index == 3)
+				throw std::runtime_error("find_duplicate returned iterator while no duplcates were present");
+		}
+
+		++index;
+	}
+}
+CATTEST(Algorithms, FindCountDuplicatesTest)
+{
+	TestLists testLists{};
+	int index{ 0 };
+
+	for (auto& list : testLists.lists)
+	{
+		auto it1{ cat::find_n_duplicates(list.begin(), list.end(), 1) };
+		if (it1 == list.end() && !list.empty())
+			throw std::runtime_error("find_n_duplicates couldn't find 1 element in non-empty list");
+
+		auto it2{ cat::find_n_duplicates(list.begin(), list.end(), 2) };
+		if (it2 != list.end())
+		{
+			if(!cat::has_duplicate(list.begin(), list.end()))
+				throw std::runtime_error("find_n_duplicates found 2 elements in list without duplicates");
+			if(it2 != std::find(list.begin(), list.end(), *it2))
+				throw std::runtime_error("find_n_duplicates did not return first result");
+		}
+
+		auto it4{ cat::find_n_duplicates(list.begin(), list.end(), 4) };
+		if (it4 != list.end())
+			if (index != 2)
+				throw std::runtime_error("find_n_duplicates found iterator while less than count duplicates were present");
+
+		auto it5{ cat::find_n_duplicates(list.begin(), list.end(), 5) };
+		if (it5 != list.end())
+			throw std::runtime_error("find_n_duplicates found 5 elements while no list contained 5 duplicates");
+
+		++index;
+	}
+}
+CATTEST(Algorithms, RemoveDuplicatesTest)
+{
+	TestLists testLists{};
+
+	for (auto& list : testLists.lists)
+	{
+		list.erase(cat::remove_duplicates(list.begin(), list.end()), list.end());
+
+		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
+			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
+				if (*it1 == *it2)
+					throw std::runtime_error("list contains duplicates after calling remove_duplicates");
+	}
+
+	testLists = {};
+
+	constexpr float testValue{ 0.f };
+
+	for (auto& list : testLists.lists)
+	{
+		list.erase(cat::remove_duplicates(list.begin(), list.end(), testValue), list.end());
+
+		for (auto it1{ list.cbegin() }; it1 != list.cend(); ++it1)
+			for (auto it2{ it1 + 1 }; it2 != list.cend(); ++it2)
+				if (*it1 == *it2 && *it1 == testValue)
+					throw std::runtime_error("list contains duplicates after calling remove_duplicates for specific value");
+	}
+}
+CATTEST(Algorithms, FindNthIfTest)
+{
+	TestLists testLists{};
+	int index{ 0 };
+
+	for (auto& list : testLists.lists)
+	{
+		auto it{ cat::find_nth_if(list.begin(), list.end(), 2, [](const float& v) { return v >= 1.f; }) };
+		if (it != list.end())
+			if(index == 3)
+				throw std::runtime_error("find_nth_if found iterator while not enough elements were present");
+
+		if (cat::find_nth_if(list.begin(), list.end(), 1, [](const float& v) { return v >= 1.f; }) !=
+			std::find_if(list.begin(), list.end(), [](const float& v) { return v >= 1.f; }))
+		{
+			throw std::runtime_error("find_nth_if with n = 1 does not behave like std::find_if");
+		}
+
+		++index;
+	}
+}
+CATTEST(Algorithms, FindNAllIfTest)
+{
+	TestLists testLists{};
+	int index{ 0 };
+
+	for (auto& list : testLists.lists)
+	{
+		auto vec{ cat::find_n_if(list.begin(), list.end(), 4, [](const float& v) { return v >= 1.f; }) };
+		auto vec2{ cat::find_all_if(list.begin(), list.end(), [](const float& v) { return v >= 1.f; }) };
+
+		if (vec != vec2)
+			throw std::runtime_error("find_n_if with n = 4 different from find_all_if");
+
+		++index;
+	}
+}
+CATTEST(Algorithms, ContainsNIfTest)
+{
+	TestLists testLists{};
+	
+	if (!cat::contains_n_if(testLists.lists[0].begin(), testLists.lists[0].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (!cat::contains_n_if(testLists.lists[1].begin(), testLists.lists[1].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (!cat::contains_n_if(testLists.lists[2].begin(), testLists.lists[2].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+	if (cat::contains_n_if(testLists.lists[3].begin(), testLists.lists[3].end(), 1, [](const float& v) { return v >= 1.f; }))
+		throw std::runtime_error("contains_n_if bad :(");
+}
 
 std::string GenerateString(uint32_t size)
 {
