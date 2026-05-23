@@ -13,7 +13,7 @@ namespace cat
 	/*
 	Creates a hash from a c_string using the sdbm hash
 	*/
-	constexpr hash_t sdbm_hash(const char* string, size_t length)
+	constexpr hash_t make_hash(const char* string, size_t length)
 	{
 		hash_t result{ 0 };
 
@@ -28,16 +28,16 @@ namespace cat
 	/*
 	Creates a hash from a string using the sdbm hash
 	*/
-	constexpr hash_t sdbm_hash(const std::string& string)
+	constexpr hash_t make_hash(const std::string& string)
 	{
-		return sdbm_hash(string.c_str(), string.size());
+		return make_hash(string.c_str(), string.size());
 	}
 
 	namespace hash_literals
 	{
 		consteval cat::hash_t operator""_h(const char* string, size_t length)
 		{
-			return cat::sdbm_hash(string, length);
+			return cat::make_hash(string, length);
 		}
 	}
 }
