@@ -118,7 +118,7 @@ CATTEST(Hashing, CollisionsTest)
 	stringList.erase(cat::remove_duplicates(stringList.begin(), stringList.end()), stringList.end());
 
 	auto it_pair{ cat::combination_compare(stringList.begin(), stringList.end(),
-		[](const std::string& v1, const std::string& v2) { return cat::sdbm_hash(v1) == cat::sdbm_hash(v2); })
+		[](const std::string& v1, const std::string& v2) { return cat::make_hash(v1) == cat::make_hash(v2); })
 	};
 
 	if (it_pair.first != stringList.end())
@@ -141,7 +141,7 @@ CATTEST(Hashing, EqualityTest)
 	auto it_pair{ cat::combination_compare(stringList.begin(), stringList.end(),
 		[](const std::string& v1, const std::string& v2)
 		{ 
-			return v1 == v2 && cat::sdbm_hash(v1) != cat::sdbm_hash(v2);
+			return v1 == v2 && cat::make_hash(v1) != cat::make_hash(v2);
 		})
 	};
 
@@ -160,10 +160,10 @@ CATTEST(Hashing, LiteralTest)
 		"cool"_h
 	};
 
-	if (hashes[0] != cat::sdbm_hash("cats")
-		|| hashes[1] != cat::sdbm_hash("are")
-		|| hashes[2] != cat::sdbm_hash("pretty")
-		|| hashes[3] != cat::sdbm_hash("cool")
+	if (hashes[0] != cat::make_hash("cats")
+		|| hashes[1] != cat::make_hash("are")
+		|| hashes[2] != cat::make_hash("pretty")
+		|| hashes[3] != cat::make_hash("cool")
 		)
 	{
 		throw std::runtime_error("hash literal not equal to sdbm_hash");
