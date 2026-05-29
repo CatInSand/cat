@@ -17,6 +17,8 @@ A collection of STL style algorithms.
 
 combination_compare: Takes a binary predicate and returns the first pair of elements that satisfies that predicate.
 
+for_each_combination: Takes a binary function and applies it to each pair of elements.
+
 all_combinations: Takes a binary predicate and returns true if all pairs of elements satisfy the predicate.
 
 any_combinations: Takes a binary predicate and returns true if any pair of elements satisfies the predicate.
@@ -54,7 +56,6 @@ find_all_if: Takes a predicate and returns the all elements that satisfy the pre
 contains_n_if: Takes a count n and a predicate and returns true if it contains n or more elements that satisfy the predicate.
 
 contains_n: Takes a count n and a value and returns true if it contains n or more elements equal to the value.
-
 
 
 ## hash.h
