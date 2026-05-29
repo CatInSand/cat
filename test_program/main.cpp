@@ -5,6 +5,7 @@
 #include "test.h"
 #include "algorithm.h"
 #include "hash.h"
+#include "pointer.h"
 
 struct TestLists
 {
@@ -270,6 +271,15 @@ CATTEST(Hashing, LiteralTest)
 	{
 		throw std::runtime_error("hash literal not equal to sdbm_hash");
 	}
+}
+
+CATTEST(Pointers, RawPointerTest)
+{
+	float pi{ 3.1415f };
+	cat::cptr<float> pointer{ &pi };
+	std::cout << *pointer << "\n";
+
+	cat::_basic_ptr<float> bp{ &pi };
 }
 
 int main()
