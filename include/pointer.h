@@ -9,12 +9,6 @@ namespace cat
 	template<typename T>
 	using ptr = T*;
 
-	/*
-	Template representation of a raw pointer to const
-	*/
-	template<typename T>
-	using cptr = ptr<const T>;
-
 	template<typename T>
 	class _basic_ptr
 	{
