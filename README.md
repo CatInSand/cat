@@ -88,6 +88,6 @@ Run all tests using cat::test::run_all(). Any errors thrown inside the test body
 
 Pointer wrappers and smart pointers.
 
-cat::ptr<T>: Template representation of raw pointer.
+cat::ptr\<T\>: Template representation of raw pointer.
 
-cat::ref_ptr<T>: Reference-like pointer that allows reassignment using operator= taking T* or another cat::ref_ptr<T>.
+cat::ref_ptr\<T\>: Reference-like pointer that allows reassignment using operator= taking T* or another cat::ref_ptr\<T\>.
