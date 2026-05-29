@@ -43,7 +43,37 @@ namespace cat
 	protected:
 		ptr<T> m_ptr;
 	};
+
+	/*
 	A pointer wrapper that is constant except for assignment operations
+	*/
+	template<typename T>
+	class ref_ptr : public _basic_ptr<T>
+	{
+	public:
+		ref_ptr(ptr<T> p_data)
+			: _basic_ptr(p_data)
+		{}
+		ref_ptr(std::nullptr_t = nullptr)
+			: _basic_ptr(nullptr)
+		{}
+
+		ref_ptr(const ref_ptr& other) = default;
+		ref_ptr(ref_ptr&& other) noexcept = default;
+		virtual ~ref_ptr() = default;
+		_basic_ptr& operator=(ptr<T> p_data)
+		{
+			m_ptr = p_data;
+		}
+		ref_ptr& operator=(std::nullptr_t)
+		{
+			m_ptr = nullptr;
+		}
+		ref_ptr& operator=(const ref_ptr& other) = default;
+		ref_ptr& operator=(ref_ptr&& other) = default;
+
+		operator const ptr<T>& () const { return m_ptr; }
+	};
 }
 
 #endif
