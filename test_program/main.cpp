@@ -2,10 +2,10 @@
 #include <vector>
 #include <format>
 
-#include "test.h"
-#include "algorithm.h"
-#include "hash.h"
-#include "pointer.h"
+#include "cat/test.h"
+#include "cat/algorithm.h"
+#include "cat/hash.h"
+#include "cat/pointer.h"
 
 struct TestLists
 {
