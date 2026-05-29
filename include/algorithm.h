@@ -28,6 +28,20 @@ namespace cat
 	}
 
 	/*
+	Apply the binary function to each pair of elements
+	*/
+	template<class ForwardIt, class BinaryFunc>
+	constexpr void for_each_combination(ForwardIt first, ForwardIt last, BinaryFunc f)
+	{
+		if (first == last)
+			return;
+
+		for (ForwardIt next{}; first != last - 1; ++first)
+			for (next = first + 1; next != last; ++next)
+				f(*first, *next);
+	}
+
+	/*
 	Test if all pairs of elements satisfy the predicate
 	*/
 	template<class ForwardIt, class BinaryPred>
