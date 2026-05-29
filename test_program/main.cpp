@@ -5,6 +5,7 @@
 #include "test.h"
 #include "algorithm.h"
 #include "hash.h"
+#include "pointer.h"
 
 struct TestLists
 {
@@ -269,6 +270,40 @@ CATTEST(Hashing, LiteralTest)
 		)
 	{
 		throw std::runtime_error("hash literal not equal to sdbm_hash");
+	}
+}
+
+CATTEST(Pointers, BasicPointerTest)
+{
+	float pi{ 3.1415f };
+	cat::ptr<float> pointer{ &pi };
+
+	cat::_basic_ptr<float> basic_pointer{ &pi };
+
+	if(pointer != basic_pointer)
+		throw std::runtime_error("Basic pointer not equal to raw pointer to same object");
+
+	std::vector<float> testList{ 1.f, 2.f, 3.f, 4.f, 5.f, 1.f, 2.f, 6.f, 7.f, 1.f, 8.f };
+
+	auto vecNormal{ cat::find_all_if(
+		testList.begin(),
+		testList.end(),
+		[](float& v) { return v > 2.f; })
+	};
+	
+	auto vecBasicPtr{ cat::find_all_if(
+		cat::_basic_ptr<float>{ testList.data() },
+		cat::_basic_ptr<float>{ testList.data() + testList.size() },
+		[](float& v) { return v > 2.f; })
+	};
+
+	if(vecBasicPtr.size() != vecNormal.size())
+		throw std::runtime_error("Algorithm not properly executed with _basic_ptr");
+
+	for (size_t index{ 0 }; index < vecBasicPtr.size(); ++index)
+	{
+		if(*vecBasicPtr[index] != *vecNormal[index])
+			throw std::runtime_error("Algorithm not properly executed with _basic_ptr");
 	}
 }
 
