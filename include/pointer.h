@@ -61,18 +61,18 @@ namespace cat
 		ref_ptr(const ref_ptr& other) = default;
 		ref_ptr(ref_ptr&& other) noexcept = default;
 		virtual ~ref_ptr() = default;
-		_basic_ptr& operator=(ptr<T> p_data)
+		ref_ptr& operator=(ptr<T> p_data)
 		{
-			m_ptr = p_data;
+			_basic_ptr<T>::m_ptr = p_data;
 		}
 		ref_ptr& operator=(std::nullptr_t)
 		{
-			m_ptr = nullptr;
+			_basic_ptr<T>::m_ptr = nullptr;
 		}
 		ref_ptr& operator=(const ref_ptr& other) = default;
 		ref_ptr& operator=(ref_ptr&& other) noexcept = default;
 
-		operator const ptr<T>& () const { return m_ptr; }
+		operator const ptr<T>& () const { return _basic_ptr<T>::m_ptr; }
 	};
 }
 
