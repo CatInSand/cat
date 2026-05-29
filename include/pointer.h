@@ -45,7 +45,7 @@ namespace cat
 	};
 
 	/*
-	A pointer wrapper that is constant except for assignment operations
+	Reference-like pointer that allows reassignment using operator=
 	*/
 	template<typename T>
 	class ref_ptr : public _basic_ptr<T>

@@ -82,3 +82,12 @@ CATTEST(suite_name, test_name)
 }
 
 Run all tests using cat::test::run_all(). Any errors thrown inside the test body will be caught and the test will be set to have failed.
+
+
+## pointer.h
+
+Pointer wrappers and smart pointers.
+
+cat::ptr<T>: Template representation of raw pointer.
+
+cat::ref_ptr<T>: Reference-like pointer that allows reassignment using operator= taking T* or another cat::ref_ptr<T>.
