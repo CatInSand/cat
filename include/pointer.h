@@ -23,6 +23,10 @@ namespace cat
 		_basic_ptr(const _basic_ptr& other) = default;
 		_basic_ptr(_basic_ptr&& other) noexcept = default;
 		virtual ~_basic_ptr() = default;
+		_basic_ptr& operator=(ptr<T> p_data)
+		{
+			m_ptr = p_data;
+		}
 		_basic_ptr& operator=(std::nullptr_t)
 		{
 			m_ptr = nullptr;
@@ -39,6 +43,7 @@ namespace cat
 	protected:
 		ptr<T> m_ptr;
 	};
+	A pointer wrapper that is constant except for assignment operations
 }
 
 #endif
