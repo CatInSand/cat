@@ -32,7 +32,7 @@ namespace cat
 			m_ptr = nullptr;
 		}
 		_basic_ptr& operator=(const _basic_ptr& other) = default;
-		_basic_ptr& operator=(_basic_ptr&& other) = default;
+		_basic_ptr& operator=(_basic_ptr&& other) noexcept = default;
 
 		T& operator*() const { return *m_ptr; }
 		ptr<T> operator->() const { return m_ptr; }
@@ -70,7 +70,7 @@ namespace cat
 			m_ptr = nullptr;
 		}
 		ref_ptr& operator=(const ref_ptr& other) = default;
-		ref_ptr& operator=(ref_ptr&& other) = default;
+		ref_ptr& operator=(ref_ptr&& other) noexcept = default;
 
 		operator const ptr<T>& () const { return m_ptr; }
 	};
