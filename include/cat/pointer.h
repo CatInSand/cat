@@ -88,7 +88,7 @@ namespace cat
 
 		void delete_resource()
 		{
-			m_uptr.reset(nullptr);
+			m_uptr.release();
 		}
 
 		std::unique_ptr<T> m_uptr;
@@ -103,9 +103,25 @@ namespace cat
 		{
 		}
 
+		T& operator*() const { return *(m_block->m_uptr); }
+		ptr<T> operator->() const { return m_block->m_uptr; }
+
+		explicit operator bool() const { return m_block->m_uptr; }
+
+		bool operator==(const ref_ptr<T>& other) { return m_block->m_uptr == other.m_block->m_uptr; }
+		bool operator!=(const ref_ptr<T>& other) { return m_block->m_uptr != other.m_block->m_uptr; }
+		bool operator<(const ref_ptr<T>& other) { return m_block->m_uptr < other.m_block->m_uptr; }
+		bool operator<=(const ref_ptr<T>& other) { return m_block->m_uptr <= other.m_block->m_uptr; }
+		bool operator>(const ref_ptr<T>&other) { return m_block->m_uptr > other.m_block->m_uptr; }
+		bool operator>=(const ref_ptr<T>&other) { return m_block->m_uptr >= other.m_block->m_uptr; }
+
+		ptr<T> get()
+		{
+			return m_block->m_uptr.get();
+		}
 		bool valid()
 		{
-			return m_block->m_uptr;
+			return m_block->m_uptr != nullptr;
 		}
 
 	private:
@@ -118,16 +134,51 @@ namespace cat
 	public:
 		refable_ptr(std::unique_ptr<T>&& uptr)
 			: m_block{ std::make_shared<_owning_block<T>>(std::move(uptr)) }
-		{
-		}
+		{}
+		refable_ptr()
+			: refable_ptr(nullptr)
+		{}
 		~refable_ptr()
 		{
 			m_block->delete_resource();
 		}
+		refable_ptr(const refable_ptr& other) = delete;
+		refable_ptr(refable_ptr&& other) noexcept = default;
+		refable_ptr& operator=(const refable_ptr& other) = delete;
+		refable_ptr& operator=(refable_ptr&& other) noexcept = default;
 
-		non_owning_ptr<T> get_reference()
+		T& operator*() const { return *(m_block->m_uptr); }
+		ptr<T> operator->() const { return m_block->m_uptr; }
+
+		explicit operator bool() const { return m_block->m_uptr; }
+
+		bool operator==(const refable_ptr<T>& other) { return m_block->m_uptr == other.m_block->m_uptr; }
+		bool operator!=(const refable_ptr<T>& other) { return m_block->m_uptr != other.m_block->m_uptr; }
+		bool operator<(const refable_ptr<T>& other) { return m_block->m_uptr < other.m_block->m_uptr; }
+		bool operator<=(const refable_ptr<T>& other) { return m_block->m_uptr <= other.m_block->m_uptr; }
+		bool operator>(const refable_ptr<T>& other) { return m_block->m_uptr > other.m_block->m_uptr; }
+		bool operator>=(const refable_ptr<T>& other) { return m_block->m_uptr >= other.m_block->m_uptr; }
+
+		ref_ptr<T> get_reference()
 		{
-			return non_owning_ptr<T>{ m_block };
+			return ref_ptr<T>{ m_block };
+		}
+
+		ptr<T> get()
+		{
+			return m_block->m_uptr.get();
+		}
+		ptr<T> release()
+		{
+			return m_block->m_uptr.release();
+		}
+		void reset(ptr<T> pointer)
+		{
+			m_block->m_uptr.reset(pointer);
+		}
+		void swap(refable_ptr& other) noexcept
+		{
+			m_block->m_uptr.swap(other->m_block->m_uptr);
 		}
 		
 	private:
