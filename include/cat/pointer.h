@@ -49,7 +49,7 @@ namespace cat
 	/*
 	Reference-like pointer that allows reassignment using operator=
 	*/
-	template<typename T>
+	/*template<typename T>
 	class ref_ptr : public _basic_ptr<T>
 	{
 	public:
@@ -75,10 +75,10 @@ namespace cat
 		ref_ptr& operator=(ref_ptr&& other) noexcept = default;
 
 		operator const ptr<T>& () const { return _basic_ptr<T>::m_ptr; }
-	};
+	};*/
 
 	template<typename T>
-	class _owning_block
+	class _owning_block final
 	{
 	public:
 		_owning_block(std::unique_ptr<T>&& uptr)
@@ -95,10 +95,10 @@ namespace cat
 	};
 
 	template<typename T>
-	class non_owning_ptr
+	class ref_ptr final
 	{
 	public:
-		non_owning_ptr(std::shared_ptr<_owning_block<T>>& block)
+		ref_ptr(std::shared_ptr<_owning_block<T>>& block)
 			: m_block{ block }
 		{
 		}
@@ -113,14 +113,14 @@ namespace cat
 	};
 
 	template<typename T>
-	class owning_ptr
+	class refable_ptr final
 	{
 	public:
-		owning_ptr(std::unique_ptr<T>&& uptr)
+		refable_ptr(std::unique_ptr<T>&& uptr)
 			: m_block{ std::make_shared<_owning_block<T>>(std::move(uptr)) }
 		{
 		}
-		~owning_ptr()
+		~refable_ptr()
 		{
 			m_block->delete_resource();
 		}
