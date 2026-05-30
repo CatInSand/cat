@@ -1,6 +1,8 @@
 #ifndef CAT_POINTER_H
 #define CAT_POINTER_H
 
+#include <memory>
+
 namespace cat
 {
 	/*
@@ -73,6 +75,63 @@ namespace cat
 		ref_ptr& operator=(ref_ptr&& other) noexcept = default;
 
 		operator const ptr<T>& () const { return _basic_ptr<T>::m_ptr; }
+	};
+
+	template<typename T>
+	class _owning_block
+	{
+	public:
+		_owning_block(std::unique_ptr<T>&& uptr)
+			: m_uptr{ std::move(uptr) }
+		{
+		}
+
+		void delete_resource()
+		{
+			m_uptr.reset(nullptr);
+		}
+
+		std::unique_ptr<T> m_uptr;
+	};
+
+	template<typename T>
+	class non_owning_ptr
+	{
+	public:
+		non_owning_ptr(std::shared_ptr<_owning_block<T>>& block)
+			: m_block{ block }
+		{
+		}
+
+		bool valid()
+		{
+			return m_block->m_uptr;
+		}
+
+	private:
+		std::shared_ptr<_owning_block<T>> m_block;
+	};
+
+	template<typename T>
+	class owning_ptr
+	{
+	public:
+		owning_ptr(std::unique_ptr<T>&& uptr)
+			: m_block{ std::make_shared<_owning_block<T>>(std::move(uptr)) }
+		{
+		}
+		~owning_ptr()
+		{
+			m_block->delete_resource();
+		}
+
+		non_owning_ptr<T> get_reference()
+		{
+			return non_owning_ptr<T>{ m_block };
+		}
+		
+	private:
+		std::shared_ptr<_owning_block<T>> m_block;
 	};
 }
 
