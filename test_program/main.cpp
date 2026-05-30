@@ -306,6 +306,31 @@ CATTEST(Pointers, BasicPointerTest)
 			throw std::runtime_error("Algorithm not properly executed with _basic_ptr");
 	}
 }
+CATTEST(Pointers, RefablePointerTest)
+{
+	constexpr float value{ 3.1415f };
+
+	cat::refable_ptr<float> owningPointer{ std::make_unique<float>(value) };
+
+	if (owningPointer.get() == nullptr)
+		throw std::runtime_error("refable_ptr has underlying pointer nullptr");
+	if(*owningPointer != value)
+		throw std::runtime_error("refable_ptr dereference yields wrong value");
+
+	cat::ref_ptr<float> referencePointer{ owningPointer.get_reference() };
+
+	if(!referencePointer.valid())
+		throw std::runtime_error("ref_ptr invalid right after creation");
+	if(owningPointer.get() != referencePointer.get())
+		throw std::runtime_error("ref_ptr and refable_ptr do not point to same data");
+
+	cat::ref_ptr<float> secondReferencePointer{ owningPointer.get_reference() };
+
+	if (referencePointer != secondReferencePointer)
+		throw std::runtime_error("ref_ptr's from same refable_ptr are not equal");
+	if (referencePointer.get() != secondReferencePointer.get())
+		throw std::runtime_error("ref_ptr's from same refable_ptr do not point to same data");
+}
 
 int main()
 {
