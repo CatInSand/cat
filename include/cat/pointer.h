@@ -78,54 +78,37 @@ namespace cat
 	};*/
 
 	template<typename T>
-	class _owning_block final
-	{
-	public:
-		_owning_block(std::unique_ptr<T>&& uptr)
-			: m_uptr{ std::move(uptr) }
-		{
-		}
-
-		void delete_resource()
-		{
-			m_uptr.release();
-		}
-
-		std::unique_ptr<T> m_uptr;
-	};
-
-	template<typename T>
 	class ref_ptr final
 	{
 	public:
-		ref_ptr(std::shared_ptr<_owning_block<T>>& block)
+		ref_ptr(std::shared_ptr<std::unique_ptr<T>>& block)
 			: m_block{ block }
 		{
 		}
 
-		T& operator*() const { return *(m_block->m_uptr); }
-		ptr<T> operator->() const { return m_block->m_uptr; }
+		T& operator*() const { return *(*m_block); }
+		ptr<T> operator->() const { return *m_block; }
 
-		explicit operator bool() const { return m_block->m_uptr; }
+		explicit operator bool() const { return *m_block; }
 
-		bool operator==(const ref_ptr<T>& other) { return m_block->m_uptr == other.m_block->m_uptr; }
-		bool operator!=(const ref_ptr<T>& other) { return m_block->m_uptr != other.m_block->m_uptr; }
-		bool operator<(const ref_ptr<T>& other) { return m_block->m_uptr < other.m_block->m_uptr; }
-		bool operator<=(const ref_ptr<T>& other) { return m_block->m_uptr <= other.m_block->m_uptr; }
-		bool operator>(const ref_ptr<T>&other) { return m_block->m_uptr > other.m_block->m_uptr; }
-		bool operator>=(const ref_ptr<T>&other) { return m_block->m_uptr >= other.m_block->m_uptr; }
+		bool operator==(const ref_ptr<T>& other) { return *m_block == *other.m_block; }
+		bool operator!=(const ref_ptr<T>& other) { return *m_block != *other.m_block; }
+		bool operator<(const ref_ptr<T>& other) { return *m_block < *other.m_block; }
+		bool operator<=(const ref_ptr<T>& other) { return *m_block <= *other.m_block; }
+		bool operator>(const ref_ptr<T>&other) { return *m_block > *other.m_block; }
+		bool operator>=(const ref_ptr<T>&other) { return *m_block >= *other.m_block; }
 
 		ptr<T> get()
 		{
-			return m_block->m_uptr.get();
+			return m_block->get();
 		}
 		bool valid()
 		{
-			return m_block->m_uptr != nullptr;
+			return *m_block != nullptr;
 		}
 
 	private:
-		std::shared_ptr<_owning_block<T>> m_block;
+		std::shared_ptr<std::unique_ptr<T>> m_block;
 	};
 
 	template<typename T>
@@ -133,31 +116,31 @@ namespace cat
 	{
 	public:
 		refable_ptr(std::unique_ptr<T>&& uptr)
-			: m_block{ std::make_shared<_owning_block<T>>(std::move(uptr)) }
+			: m_block{ std::make_shared<std::unique_ptr<T>>(std::move(uptr)) }
 		{}
 		refable_ptr()
 			: refable_ptr(nullptr)
 		{}
 		~refable_ptr()
 		{
-			m_block->delete_resource();
+			m_block->release();
 		}
 		refable_ptr(const refable_ptr& other) = delete;
 		refable_ptr(refable_ptr&& other) noexcept = default;
 		refable_ptr& operator=(const refable_ptr& other) = delete;
 		refable_ptr& operator=(refable_ptr&& other) noexcept = default;
 
-		T& operator*() const { return *(m_block->m_uptr); }
-		ptr<T> operator->() const { return m_block->m_uptr; }
+		T& operator*() const { return *(*m_block); }
+		ptr<T> operator->() const { return *m_block; }
 
-		explicit operator bool() const { return m_block->m_uptr; }
+		explicit operator bool() const { return *m_block; }
 
-		bool operator==(const refable_ptr<T>& other) { return m_block->m_uptr == other.m_block->m_uptr; }
-		bool operator!=(const refable_ptr<T>& other) { return m_block->m_uptr != other.m_block->m_uptr; }
-		bool operator<(const refable_ptr<T>& other) { return m_block->m_uptr < other.m_block->m_uptr; }
-		bool operator<=(const refable_ptr<T>& other) { return m_block->m_uptr <= other.m_block->m_uptr; }
-		bool operator>(const refable_ptr<T>& other) { return m_block->m_uptr > other.m_block->m_uptr; }
-		bool operator>=(const refable_ptr<T>& other) { return m_block->m_uptr >= other.m_block->m_uptr; }
+		bool operator==(const refable_ptr<T>& other) { return *m_block == *other.m_block; }
+		bool operator!=(const refable_ptr<T>& other) { return *m_block != *other.m_block; }
+		bool operator<(const refable_ptr<T>& other) { return *m_block < *other.m_block; }
+		bool operator<=(const refable_ptr<T>& other) { return *m_block <= *other.m_block; }
+		bool operator>(const refable_ptr<T>& other) { return *m_block > *other.m_block; }
+		bool operator>=(const refable_ptr<T>& other) { return *m_block >= *other.m_block; }
 
 		ref_ptr<T> get_reference()
 		{
@@ -166,23 +149,23 @@ namespace cat
 
 		ptr<T> get()
 		{
-			return m_block->m_uptr.get();
+			return m_block->get();
 		}
 		ptr<T> release()
 		{
-			return m_block->m_uptr.release();
+			return m_block->release();
 		}
 		void reset(ptr<T> pointer)
 		{
-			m_block->m_uptr.reset(pointer);
+			m_block->reset(pointer);
 		}
 		void swap(refable_ptr& other) noexcept
 		{
-			m_block->m_uptr.swap(other->m_block->m_uptr);
+			m_block->swap(*other->m_block);
 		}
 		
 	private:
-		std::shared_ptr<_owning_block<T>> m_block;
+		std::shared_ptr<std::unique_ptr<T>> m_block;
 	};
 }
 
