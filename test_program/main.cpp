@@ -6,6 +6,7 @@
 #include "cat/algorithm.h"
 #include "cat/hash.h"
 #include "cat/pointer.h"
+#include "cat/math.h"
 
 struct TestLists
 {
@@ -306,11 +307,11 @@ CATTEST(Pointers, BasicPointerTest)
 			throw std::runtime_error("Algorithm not properly executed with _basic_ptr");
 	}
 }
-CATTEST(Pointers, RefablePointerTest)
+CATTEST(Pointers, StickyPointerTest)
 {
 	constexpr float value{ 3.1415f };
 
-	cat::refable_ptr<float> owningPointer{ std::make_unique<float>(value) };
+	cat::sticky_ptr<float> owningPointer{ std::make_unique<float>(value) };
 
 	if (owningPointer.get() == nullptr)
 		throw std::runtime_error("refable_ptr has underlying pointer nullptr");
