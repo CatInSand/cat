@@ -8,7 +8,23 @@ namespace cat
 	/*
 	Type used to store string hashes
 	*/
+#ifdef CAT_HASH_TYPE_UINT8
+	using hash_t = uint8_t;
+#else
+#ifdef CAT_HASH_TYPE_UINT16
+	using hash_t = uint16_t;
+#else
+#ifdef CAT_HASH_TYPE_UINT32
 	using hash_t = uint32_t;
+#else
+#ifdef CAT_HASH_TYPE_UINT64
+	using hash_t = uint64_t;
+#else
+	using hash_t = uint32_t;
+#endif
+#endif
+#endif
+#endif
 
 	/*
 	Creates a hash from a c_string using the sdbm hash
