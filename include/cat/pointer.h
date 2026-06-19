@@ -46,37 +46,6 @@ namespace cat
 		ptr<T> m_ptr;
 	};
 
-	/*
-	Reference-like pointer that allows reassignment using operator=
-	*/
-	/*template<typename T>
-	class ref_ptr : public _basic_ptr<T>
-	{
-	public:
-		ref_ptr(ptr<T> p_data)
-			: _basic_ptr(p_data)
-		{}
-		ref_ptr(std::nullptr_t = nullptr)
-			: _basic_ptr(nullptr)
-		{}
-
-		ref_ptr(const ref_ptr& other) = default;
-		ref_ptr(ref_ptr&& other) noexcept = default;
-		virtual ~ref_ptr() = default;
-		ref_ptr& operator=(ptr<T> p_data)
-		{
-			_basic_ptr<T>::m_ptr = p_data;
-		}
-		ref_ptr& operator=(std::nullptr_t)
-		{
-			_basic_ptr<T>::m_ptr = nullptr;
-		}
-		ref_ptr& operator=(const ref_ptr& other) = default;
-		ref_ptr& operator=(ref_ptr&& other) noexcept = default;
-
-		operator const ptr<T>& () const { return _basic_ptr<T>::m_ptr; }
-	};*/
-
 	template<typename T>
 	class ref_ptr final
 	{
