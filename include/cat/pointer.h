@@ -81,35 +81,35 @@ namespace cat
 	};
 
 	template<typename T>
-	class refable_ptr final
+	class sticky_ptr final
 	{
 	public:
-		refable_ptr(std::unique_ptr<T>&& uptr)
+		sticky_ptr(std::unique_ptr<T>&& uptr)
 			: m_block{ std::make_shared<std::unique_ptr<T>>(std::move(uptr)) }
 		{}
-		refable_ptr()
-			: refable_ptr(nullptr)
+		sticky_ptr()
+			: sticky_ptr(nullptr)
 		{}
-		~refable_ptr()
+		~sticky_ptr()
 		{
 			m_block->release();
 		}
-		refable_ptr(const refable_ptr& other) = delete;
-		refable_ptr(refable_ptr&& other) noexcept = default;
-		refable_ptr& operator=(const refable_ptr& other) = delete;
-		refable_ptr& operator=(refable_ptr&& other) noexcept = default;
+		sticky_ptr(const sticky_ptr& other) = delete;
+		sticky_ptr(sticky_ptr&& other) noexcept = default;
+		sticky_ptr& operator=(const sticky_ptr& other) = delete;
+		sticky_ptr& operator=(sticky_ptr&& other) noexcept = default;
 
 		T& operator*() const { return *(*m_block); }
 		ptr<T> operator->() const { return *m_block; }
 
 		explicit operator bool() const { return *m_block; }
 
-		bool operator==(const refable_ptr<T>& other) { return *m_block == *other.m_block; }
-		bool operator!=(const refable_ptr<T>& other) { return *m_block != *other.m_block; }
-		bool operator<(const refable_ptr<T>& other) { return *m_block < *other.m_block; }
-		bool operator<=(const refable_ptr<T>& other) { return *m_block <= *other.m_block; }
-		bool operator>(const refable_ptr<T>& other) { return *m_block > *other.m_block; }
-		bool operator>=(const refable_ptr<T>& other) { return *m_block >= *other.m_block; }
+		bool operator==(const sticky_ptr<T>& other) { return *m_block == *other.m_block; }
+		bool operator!=(const sticky_ptr<T>& other) { return *m_block != *other.m_block; }
+		bool operator<(const sticky_ptr<T>& other) { return *m_block < *other.m_block; }
+		bool operator<=(const sticky_ptr<T>& other) { return *m_block <= *other.m_block; }
+		bool operator>(const sticky_ptr<T>& other) { return *m_block > *other.m_block; }
+		bool operator>=(const sticky_ptr<T>& other) { return *m_block >= *other.m_block; }
 
 		ref_ptr<T> get_reference()
 		{
@@ -128,7 +128,7 @@ namespace cat
 		{
 			m_block->reset(pointer);
 		}
-		void swap(refable_ptr& other) noexcept
+		void swap(sticky_ptr& other) noexcept
 		{
 			m_block->swap(*other->m_block);
 		}
