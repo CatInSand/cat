@@ -46,6 +46,9 @@ namespace cat
 		ptr<T> m_ptr;
 	};
 
+	/*
+	Non-owning pointer that references a sticky_ptr
+	*/
 	template<typename T>
 	class ref_ptr final
 	{
@@ -80,6 +83,9 @@ namespace cat
 		std::shared_ptr<std::unique_ptr<T>> m_pblock;
 	};
 
+	/*
+	Owning pointer that allows safe referencing with ref_ptr
+	*/
 	template<typename T>
 	class sticky_ptr final
 	{
