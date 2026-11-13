@@ -51,33 +51,33 @@ namespace cat
 	{
 	public:
 		ref_ptr(std::shared_ptr<std::unique_ptr<T>>& block)
-			: m_block{ block }
+			: m_pblock{ block }
 		{
 		}
 
-		T& operator*() const { return *(*m_block); }
-		ptr<T> operator->() const { return *m_block; }
+		T& operator*() const { return *(*m_pblock); }
+		ptr<T> operator->() const { return *m_pblock; }
 
-		explicit operator bool() const { return *m_block; }
+		explicit operator bool() const { return *m_pblock; }
 
-		bool operator==(const ref_ptr<T>& other) { return *m_block == *other.m_block; }
-		bool operator!=(const ref_ptr<T>& other) { return *m_block != *other.m_block; }
-		bool operator<(const ref_ptr<T>& other) { return *m_block < *other.m_block; }
-		bool operator<=(const ref_ptr<T>& other) { return *m_block <= *other.m_block; }
-		bool operator>(const ref_ptr<T>&other) { return *m_block > *other.m_block; }
-		bool operator>=(const ref_ptr<T>&other) { return *m_block >= *other.m_block; }
+		bool operator==(const ref_ptr<T>& other) { return *m_pblock == *other.m_pblock; }
+		bool operator!=(const ref_ptr<T>& other) { return *m_pblock != *other.m_pblock; }
+		bool operator<(const ref_ptr<T>& other) { return *m_pblock < *other.m_pblock; }
+		bool operator<=(const ref_ptr<T>& other) { return *m_pblock <= *other.m_pblock; }
+		bool operator>(const ref_ptr<T>&other) { return *m_pblock > *other.m_pblock; }
+		bool operator>=(const ref_ptr<T>&other) { return *m_pblock >= *other.m_pblock; }
 
 		ptr<T> get()
 		{
-			return m_block->get();
+			return m_pblock->get();
 		}
 		bool valid()
 		{
-			return *m_block != nullptr;
+			return *m_pblock != nullptr;
 		}
 
 	private:
-		std::shared_ptr<std::unique_ptr<T>> m_block;
+		std::shared_ptr<std::unique_ptr<T>> m_pblock;
 	};
 
 	template<typename T>
@@ -85,56 +85,56 @@ namespace cat
 	{
 	public:
 		sticky_ptr(std::unique_ptr<T>&& uptr)
-			: m_block{ std::make_shared<std::unique_ptr<T>>(std::move(uptr)) }
+			: m_pblock{ std::make_shared<std::unique_ptr<T>>(std::move(uptr)) }
 		{}
 		sticky_ptr()
 			: sticky_ptr(nullptr)
 		{}
 		~sticky_ptr()
 		{
-			m_block->release();
+			m_pblock->release();
 		}
 		sticky_ptr(const sticky_ptr& other) = delete;
 		sticky_ptr(sticky_ptr&& other) noexcept = default;
 		sticky_ptr& operator=(const sticky_ptr& other) = delete;
 		sticky_ptr& operator=(sticky_ptr&& other) noexcept = default;
 
-		T& operator*() const { return *(*m_block); }
-		ptr<T> operator->() const { return *m_block; }
+		T& operator*() const { return *(*m_pblock); }
+		ptr<T> operator->() const { return *m_pblock; }
 
-		explicit operator bool() const { return *m_block; }
+		explicit operator bool() const { return *m_pblock; }
 
-		bool operator==(const sticky_ptr<T>& other) { return *m_block == *other.m_block; }
-		bool operator!=(const sticky_ptr<T>& other) { return *m_block != *other.m_block; }
-		bool operator<(const sticky_ptr<T>& other) { return *m_block < *other.m_block; }
-		bool operator<=(const sticky_ptr<T>& other) { return *m_block <= *other.m_block; }
-		bool operator>(const sticky_ptr<T>& other) { return *m_block > *other.m_block; }
-		bool operator>=(const sticky_ptr<T>& other) { return *m_block >= *other.m_block; }
+		bool operator==(const sticky_ptr<T>& other) { return *m_pblock == *other.m_pblock; }
+		bool operator!=(const sticky_ptr<T>& other) { return *m_pblock != *other.m_pblock; }
+		bool operator<(const sticky_ptr<T>& other) { return *m_pblock < *other.m_pblock; }
+		bool operator<=(const sticky_ptr<T>& other) { return *m_pblock <= *other.m_pblock; }
+		bool operator>(const sticky_ptr<T>& other) { return *m_pblock > *other.m_pblock; }
+		bool operator>=(const sticky_ptr<T>& other) { return *m_pblock >= *other.m_pblock; }
 
 		ref_ptr<T> get_reference()
 		{
-			return ref_ptr<T>{ m_block };
+			return ref_ptr<T>{ m_pblock };
 		}
 
 		ptr<T> get()
 		{
-			return m_block->get();
+			return m_pblock->get();
 		}
 		ptr<T> release()
 		{
-			return m_block->release();
+			return m_pblock->release();
 		}
 		void reset(ptr<T> pointer)
 		{
-			m_block->reset(pointer);
+			m_pblock->reset(pointer);
 		}
 		void swap(sticky_ptr& other) noexcept
 		{
-			m_block->swap(*other->m_block);
+			m_pblock->swap(*other->m_pblock);
 		}
 		
 	private:
-		std::shared_ptr<std::unique_ptr<T>> m_block;
+		std::shared_ptr<std::unique_ptr<T>> m_pblock;
 	};
 }
 
