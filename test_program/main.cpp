@@ -314,23 +314,23 @@ CATTEST(Pointers, StickyPointerTest)
 	cat::sticky_ptr<float> owningPointer{ std::make_unique<float>(value) };
 
 	if (owningPointer.get() == nullptr)
-		throw std::runtime_error("refable_ptr has underlying pointer nullptr");
+		throw std::runtime_error("sticky_ptr has underlying pointer nullptr");
 	if(*owningPointer != value)
-		throw std::runtime_error("refable_ptr dereference yields wrong value");
+		throw std::runtime_error("sticky_ptr dereference yields wrong value");
 
 	cat::ref_ptr<float> referencePointer{ owningPointer.get_reference() };
 
 	if(!referencePointer.valid())
 		throw std::runtime_error("ref_ptr invalid right after creation");
 	if(owningPointer.get() != referencePointer.get())
-		throw std::runtime_error("ref_ptr and refable_ptr do not point to same data");
+		throw std::runtime_error("ref_ptr and sticky_ptr do not point to same data");
 
 	cat::ref_ptr<float> secondReferencePointer{ owningPointer.get_reference() };
 
 	if (referencePointer != secondReferencePointer)
-		throw std::runtime_error("ref_ptr's from same refable_ptr are not equal");
+		throw std::runtime_error("ref_ptr's from same sticky_ptr are not equal");
 	if (referencePointer.get() != secondReferencePointer.get())
-		throw std::runtime_error("ref_ptr's from same refable_ptr do not point to same data");
+		throw std::runtime_error("ref_ptr's from same sticky_ptr do not point to same data");
 }
 
 int main()
