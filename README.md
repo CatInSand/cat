@@ -62,12 +62,14 @@ contains_n: Takes a count n and a value and returns true if it contains n or mor
 
 String hashing functions and literal overload. Uses sdbm hash.
 
-Call cat::make_hash(const std::string& string) or cat::make_hash(const char* string, size_t length) to create a hash of type cat::hash_t (currently uint32_t).
+Call cat::make_hash(const std::string& string) or cat::make_hash(const char* string, size_t length) to create a hash of type cat::hash_t (uint32_t by default).
 You can also add "using namespace cat::hash_literals;" to use the literal overload "_h" to convert strings to hash_t at compile time:
 
 cat::hash_t nameHash{ "CatInSand"_h };
 
 The namespace "cat::hash_literals" contains no other code so it is safe to use a using directive.
+
+Specify the size of cat::hash_t by using #define with CAT_HASH_TYPE_UINT8, CAT_HASH_TYPE_UINT16, CAT_HASH_TYPE_UINT32 or CAT_HASH_TYPE_UINT64 before including cat/hash.h
 
 
 ## test.h
