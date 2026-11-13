@@ -90,4 +90,6 @@ Pointer wrappers and smart pointers.
 
 cat::ptr\<T\>: Template representation of raw pointer.
 
-cat::ref_ptr\<T\>: Reference-like pointer that allows reassignment using operator= taking T* or another cat::ref_ptr\<T\>.
+cat::sticky_ptr\<T\>: Owning pointer that allows safe referencing with ref_ptr. All ref_ptr's return nullptr after sticky_ptr goes out of scope.
+
+cat::ref_ptr\<T\>: Non-owning pointer that references a sticky_ptr.
