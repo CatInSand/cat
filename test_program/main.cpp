@@ -173,9 +173,9 @@ CATTEST(Algorithms, FindNAllIfTest)
 	for (auto& list : testLists.lists)
 	{
 		auto vec{ cat::find_n_if(list.begin(), list.end(), 4, [](const float& v) { return v >= 1.f; }) };
-		auto vec2{ cat::find_all_if(list.begin(), list.end(), [](const float& v) { return v >= 1.f; }) };
+		auto tvec2{ cat::find_all_if(list.begin(), list.end(), [](const float& v) { return v >= 1.f; }) };
 
-		if (vec != vec2)
+		if (vec != tvec2)
 			throw std::runtime_error("find_n_if with n = 4 different from find_all_if");
 
 		++index;

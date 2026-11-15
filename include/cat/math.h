@@ -11,7 +11,7 @@ namespace cat
 
 	template<typename T>
 		requires number<T>
-	struct vec2 final
+	struct tvec2 final
 	{
 		T x;
 		T y;
@@ -39,30 +39,34 @@ namespace cat
 		T x;
 		T y;
 	};
+	template<typename T>
+		requires number<T>
+	using tsize2 = tvec2<T>;
 
 	template<typename T>
 		requires number<T>
-	struct rect final
+	struct trect final
 	{
 		T x;
 		T w;
 		T y;
 		T h;
 
-		cat::size2<T> size() const
+		cat::tsize2<T> size() const
 		{
-			return cat::size2<T>{ w, h };
+			return cat::tsize2<T>{ w, h };
 		}
-		cat::vec2<T> position() const
+		cat::tvec2<T> position() const
 		{
-			return cat::vec2<T>{ x, y };
+			return cat::tvec2<T>{ x, y };
 		}
-		cat::vec2<T> center() const
+		cat::tvec2<T> center() const
 		{
-			return cat::vec2<T>{ x + w / 2, y + h / 2 };
+			return cat::tvec2<T>{ x + w / 2, y + h / 2 };
 		}
 
 		static bool overlap(rect<T> rect1, rect<T> rect2)
+		static bool overlaps(trect<T> rect1, trect<T> rect2)
 		{
 			if (rect1.x > rect2.x - rect1.w && rect1.x < rect2.x + rect2.w)
 				if (rect1.y > rect2.y - rect1.h && rect1.y < rect2.y + rect2.h)
