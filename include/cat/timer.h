@@ -2,9 +2,75 @@
 #define CAT_TIMER_H
 
 #include <cassert>
+#include <chrono>
+#include <concepts>
 
 namespace cat
 {
+	constexpr float _micro_to_seconds = 1000000.f;
+
+	template<std::floating_point T = float>
+	class stopwatch final
+	{
+	public:
+		explicit stopwatch() = default;
+
+		/*
+		Resets stopwatch and stops timing.
+		*/
+		void reset()
+		{
+			m_start = std::chrono::high_resolution_clock::now();
+			m_elapsed_time = 0.f;
+			m_running = false;
+		}
+		/*
+		Resets stopwatch and starts timing.
+		*/
+		void start()
+		{
+			m_start = std::chrono::high_resolution_clock::now();
+			m_running = true;
+		}
+		/*
+		Stops timing.
+		*/
+		void stop()
+		{
+			m_elapsed_time = elapsed();
+			m_running = false;
+		}
+		/*
+		Resumes timing;
+		*/
+		void resume()
+		{
+			m_running = true;
+		}
+		
+		bool running() const
+		{
+			return m_running;
+		}
+		/*
+		Returns the elapsed time in seconds.
+		*/
+		T elapsed() const
+		{
+			if (m_running)
+			{
+				return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - m_start).count() / _micro_to_seconds;
+			}
+
+			return m_elapsed_time;
+		}
+
+	protected:
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_start{ std::chrono::high_resolution_clock::now() };
+		T m_elapsed_time{ 0.f };
+		bool m_running{ false };
+	};
+
 	template<std::floating_point T = float>
 	class timer final
 	{
