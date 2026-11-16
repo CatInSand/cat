@@ -62,7 +62,7 @@ namespace cat
 			return times_done;
 		}
 		/*
-		Returns true if done and decrements elapsed time by duration
+		If done, returns true and decrements elapsed time by duration. Otherwise returns false.
 		*/
 		bool decrement_get()
 		{
