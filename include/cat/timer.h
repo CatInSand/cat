@@ -4,13 +4,14 @@
 #include <cassert>
 #include <chrono>
 #include <concepts>
+#include <algorithm>
 
 namespace cat
 {
 	constexpr float _micro_to_seconds = 1000000.f;
 
 	template<std::floating_point T = float>
-	class stopwatch final
+	class stopwatch
 	{
 	public:
 		explicit stopwatch() = default;
@@ -69,6 +70,47 @@ namespace cat
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_start{ std::chrono::high_resolution_clock::now() };
 		T m_elapsed_time{ 0.f };
 		bool m_running{ false };
+	};
+
+	template<std::floating_point T = float>
+	class timer final : public stopwatch<T>
+	{
+	public:
+		explicit timer(T seconds_duration)
+			: stopwatch<T>()
+			, m_duration{ seconds_duration }
+		{ }
+
+		/*
+		Sets the duration.
+		*/
+		void set(T seconds_duration)
+		{
+			m_duration = seconds_duration;
+		}
+		
+		/*
+		Returns the remaining time in seconds.
+		*/
+		T remaining() const
+		{
+			return std::max<T>(m_duration - elapsed(), 0.);
+		}
+		T duration() const
+		{
+			return m_duration;
+		}
+		bool done() const
+		{
+			return elapsed() >= m_duration;
+		}
+		int times_done() const
+		{
+			return static_cast<int>(elapsed() / m_duration);
+		}
+
+	private:
+		T m_duration;
 	};
 
 	template<std::floating_point T = float>
