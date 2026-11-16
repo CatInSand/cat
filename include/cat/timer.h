@@ -54,7 +54,6 @@ namespace cat
 				return true;
 			}
 
-			return false
 			return false;
 		}
 
