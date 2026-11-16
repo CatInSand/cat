@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <format>
+#include <algorithm>
 
 #include "cat/test.h"
 #include "cat/algorithm.h"
@@ -340,36 +341,36 @@ CATTEST(Timer, TimerTest)
 	float deltaTime{ 1.f / 60.f };
 	float duration{ 1.f };
 
-	cat::timer timer{ duration };
+	cat::mtimer mtimer{ duration };
 
-	while (!timer.done())
+	while (!mtimer.done())
 	{
-		timer.update(deltaTime);
+		mtimer.update(deltaTime);
 	}
 
-	if(timer.elapsed() < duration || timer.elapsed() > duration + deltaTime)
+	if(mtimer.elapsed() < duration || mtimer.elapsed() > duration + deltaTime)
 		throw std::runtime_error("timer done at wrong elapsed_time");
 
-	if(!timer.decrement_get())
+	if(!mtimer.decrement_get())
 		throw std::runtime_error("decrement_get did not return true while done");
-	if(timer.elapsed() < 0.f || timer.elapsed() > deltaTime)
+	if(mtimer.elapsed() < 0.f || mtimer.elapsed() > deltaTime)
 		throw std::runtime_error("decrement_get did not decrement correctly");
 
-	timer.reset();
-	timer.update(10.5f);
-	if(timer.modulo_get() != 10.f)
+	mtimer.reset();
+	mtimer.update(10.5f);
+	if(mtimer.modulo_get() != 10.f)
 		throw std::runtime_error("modulo_get returned wrong number");
-	if(timer.elapsed() < 0.5f - EPSILON || timer.elapsed() > 0.5f + EPSILON)
+	if(mtimer.elapsed() < 0.5f - EPSILON || mtimer.elapsed() > 0.5f + EPSILON)
 		throw std::runtime_error("modulo_get applied modulo incorrectly");
 
-	timer.reset();
+	mtimer.reset();
 	float remaining{ 1.f };
-	while (!timer.done())
+	while (!mtimer.done())
 	{
-		if (timer.remaining() < remaining - EPSILON || timer.remaining() > remaining + EPSILON)
+		if (mtimer.remaining() < remaining - EPSILON || mtimer.remaining() > remaining + EPSILON)
 			throw std::runtime_error("remaining time incorrect");
 
-		timer.update(deltaTime);
+		mtimer.update(deltaTime);
 		remaining -= deltaTime;
 	}
 }

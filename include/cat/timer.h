@@ -72,10 +72,10 @@ namespace cat
 	};
 
 	template<std::floating_point T = float>
-	class timer final
+	class mtimer final
 	{
 	public:
-		explicit timer(T duration)
+		explicit mtimer(T duration)
 			: m_duration{ duration }
 		{ }
 
