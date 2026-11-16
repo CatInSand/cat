@@ -34,6 +34,21 @@ namespace cat
 			m_elapsed_time = 0.f;
 			m_duration = duration;
 		}
+		/*
+		Sets elapsed time
+		*/
+		void set(float elapsed_time)
+		{
+			m_elapsed_time = elapsed_time;
+		}
+		/*
+		Sets elapsed time and duration
+		*/
+		void set(float elapsed_time, float duration)
+		{
+			m_elapsed_time = elapsed_time;
+			m_duration = duration;
+		}
 
 		/*
 		Returns the number of times duration has elapsed and applies modulo to elapsed time using duration
