@@ -17,7 +17,7 @@ namespace cat
 		explicit stopwatch() = default;
 
 		/*
-		Resets stopwatch and stops timing.
+		Resets stopwatch and stops timing
 		*/
 		void reset()
 		{
@@ -26,7 +26,7 @@ namespace cat
 			m_running = false;
 		}
 		/*
-		Resets stopwatch and starts timing.
+		Resets stopwatch and starts timing
 		*/
 		void start()
 		{
@@ -34,7 +34,7 @@ namespace cat
 			m_running = true;
 		}
 		/*
-		Stops timing.
+		Stops timing
 		*/
 		void stop()
 		{
@@ -42,7 +42,7 @@ namespace cat
 			m_running = false;
 		}
 		/*
-		Resumes timing;
+		Resumes timing
 		*/
 		void resume()
 		{
@@ -54,7 +54,7 @@ namespace cat
 			return m_running;
 		}
 		/*
-		Returns the elapsed time in seconds.
+		Returns the elapsed time in seconds
 		*/
 		T elapsed() const
 		{
@@ -82,7 +82,7 @@ namespace cat
 		{ }
 
 		/*
-		Sets the duration.
+		Sets the duration
 		*/
 		void set(T seconds_duration)
 		{
@@ -90,7 +90,7 @@ namespace cat
 		}
 		
 		/*
-		Returns the remaining time in seconds.
+		Returns the remaining time in seconds
 		*/
 		T remaining() const
 		{
@@ -114,7 +114,7 @@ namespace cat
 	};
 
 	template<std::floating_point T = float>
-	class mtimer final
+	class mstopwatch
 	{
 	public:
 		explicit mtimer(T duration)
