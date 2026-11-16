@@ -1,7 +1,6 @@
 #ifndef CAT_TIMER_H
 #define CAT_TIMER_H
 
-#include <cmath>
 
 namespace cat
 {
@@ -56,6 +55,7 @@ namespace cat
 			}
 
 			return false
+			return false;
 		}
 
 		float elapsed() const
@@ -73,7 +73,6 @@ namespace cat
 		{
 			return m_duration;
 		}
-
 		bool done() const
 		{
 			return m_elapsed_time >= m_duration;
