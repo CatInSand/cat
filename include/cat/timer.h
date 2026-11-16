@@ -41,7 +41,7 @@ namespace cat
 		int modulo_get()
 		{
 			int times_done{ static_cast<int>(m_elapsed_time / m_duration) };
-			m_elapsed_time = std::fmod(m_elapsed_time, m_duration);
+			m_elapsed_time -= m_duration * times_done;
 			return times_done;
 		}
 		/*
