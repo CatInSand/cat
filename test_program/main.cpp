@@ -7,6 +7,7 @@
 #include "cat/hash.h"
 #include "cat/pointer.h"
 #include "cat/math.h"
+#include "cat/timer.h"
 
 struct TestLists
 {
@@ -331,6 +332,46 @@ CATTEST(Pointers, StickyPointerTest)
 		throw std::runtime_error("ref_ptr's from same sticky_ptr are not equal");
 	if (referencePointer.get() != secondReferencePointer.get())
 		throw std::runtime_error("ref_ptr's from same sticky_ptr do not point to same data");
+}
+
+CATTEST(Timer, TimerTest)
+{
+	constexpr float EPSILON{ 0.000001f };
+	float deltaTime{ 1.f / 60.f };
+	float duration{ 1.f };
+
+	cat::timer timer{ duration };
+
+	while (!timer.done())
+	{
+		timer.update(deltaTime);
+	}
+
+	if(timer.elapsed() < duration || timer.elapsed() > duration + deltaTime)
+		throw std::runtime_error("timer done at wrong elapsed_time");
+
+	if(!timer.decrement_get())
+		throw std::runtime_error("decrement_get did not return true while done");
+	if(timer.elapsed() < 0.f || timer.elapsed() > deltaTime)
+		throw std::runtime_error("decrement_get did not decrement correctly");
+
+	timer.reset();
+	timer.update(10.5f);
+	if(timer.modulo_get() != 10.f)
+		throw std::runtime_error("modulo_get returned wrong number");
+	if(timer.elapsed() < 0.5f - EPSILON || timer.elapsed() > 0.5f + EPSILON)
+		throw std::runtime_error("modulo_get applied modulo incorrectly");
+
+	timer.reset();
+	float remaining{ 1.f };
+	while (!timer.done())
+	{
+		if (timer.remaining() < remaining - EPSILON || timer.remaining() > remaining + EPSILON)
+			throw std::runtime_error("remaining time incorrect");
+
+		timer.update(deltaTime);
+		remaining -= deltaTime;
+	}
 }
 
 int main()
