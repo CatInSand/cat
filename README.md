@@ -95,3 +95,32 @@ cat::ptr\<T\>: Template representation of raw pointer.
 cat::sticky_ptr\<T\>: Owning pointer that allows safe referencing with ref_ptr. All ref_ptr's return nullptr after sticky_ptr goes out of scope.
 
 cat::ref_ptr\<T\>: Non-owning pointer that references a sticky_ptr.
+
+
+## timer.h
+
+Class cat::timer for tracking elapsed time.
+
+cat::timer::timer(float duration): Constructs a timer with a duration.
+
+cat::timer::update(float delta_time): Increments elapsed time by delta_time.
+
+cat::timer::reset(): Sets elapsed time to 0.
+
+cat::timer::reset(float duration): Sets elapsed time to 0 and sets duration.
+
+cat::timer::set(float elapsed_time): Sets elapsed time.
+
+cat::timer::set(float elapsed_time, float duration): Sets elapsed time and duration.
+
+cat::timer::modulo_get(): Returns the number of times the duration has elapsed and sets elapsed time to the remainder.
+
+cat::timer::decrement_get(): If duration has elapsed, returns true and decrements elapsed time by duration. Otherwise returns false.
+
+cat::timer::elapsed(): Returns elapsed time.
+
+cat::timer::remaining(): Returns remaining time.
+
+cat::timer::duration(): Returns duration.
+
+cat::timer::done(): Returns true if duration has elapsed.
