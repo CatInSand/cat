@@ -124,16 +124,16 @@ namespace cat
 		{
 			assert(m_duration != 0.f && "timer::modulo_get() is invalid for duration 0");
 
-			int times_done{ static_cast<int>(m_elapsed_time / m_duration) };
-			m_elapsed_time -= m_duration * times_done;
-			return times_done;
+			int amount{ times_done() };
+			m_elapsed_time -= m_duration * amount;
+			return amount;
 		}
 		/*
 		If done, returns true and decrements elapsed time by duration. Otherwise returns false.
 		*/
 		bool decrement_get()
 		{
-			if (m_elapsed_time >= m_duration)
+			if (done())
 			{
 				m_elapsed_time -= m_duration;
 				return true;
@@ -160,6 +160,10 @@ namespace cat
 		bool done() const
 		{
 			return m_elapsed_time >= m_duration;
+		}
+		int times_done() const
+		{
+			return static_cast<int>(m_elapsed_time / m_duration);
 		}
 
 	private:
