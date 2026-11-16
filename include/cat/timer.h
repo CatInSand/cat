@@ -8,7 +8,7 @@ namespace cat
 	class timer final
 	{
 	public:
-		timer(float duration)
+		explicit timer(T duration)
 			: m_duration{ duration }
 		{ }
 
