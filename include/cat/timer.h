@@ -5,6 +5,7 @@
 
 namespace cat
 {
+	template<std::floating_point T = float>
 	class timer final
 	{
 	public:
@@ -15,7 +16,7 @@ namespace cat
 		/*
 		Increments elapsed time by delta_time
 		*/
-		void update(float delta_time)
+		void update(T delta_time)
 		{
 			m_elapsed_time += delta_time;
 		}
@@ -29,7 +30,7 @@ namespace cat
 		/*
 		Sets elapsed time to 0 and sets duration
 		*/
-		void reset(float duration)
+		void reset(T duration)
 		{
 			m_elapsed_time = 0.f;
 			m_duration = duration;
@@ -37,14 +38,14 @@ namespace cat
 		/*
 		Sets elapsed time
 		*/
-		void set(float elapsed_time)
+		void set(T elapsed_time)
 		{
 			m_elapsed_time = elapsed_time;
 		}
 		/*
 		Sets elapsed time and duration
 		*/
-		void set(float elapsed_time, float duration)
+		void set(T elapsed_time, T duration)
 		{
 			m_elapsed_time = elapsed_time;
 			m_duration = duration;
@@ -75,18 +76,18 @@ namespace cat
 			return false;
 		}
 
-		float elapsed() const
+		T elapsed() const
 		{
 			return m_elapsed_time;
 		}
-		float remaining() const
+		T remaining() const
 		{
 			if (m_elapsed_time < m_duration)
 				return m_duration - m_elapsed_time;
 
 			return 0.f;
 		}
-		float duration() const
+		T duration() const
 		{
 			return m_duration;
 		}
@@ -96,8 +97,8 @@ namespace cat
 		}
 
 	private:
-		float m_duration;
-		float m_elapsed_time{ 0.f };
+		T m_duration;
+		T m_elapsed_time{ 0.f };
 	};
 }
 
