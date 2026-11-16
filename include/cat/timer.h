@@ -117,9 +117,7 @@ namespace cat
 	class mstopwatch
 	{
 	public:
-		explicit mtimer(T duration)
-			: m_duration{ duration }
-		{ }
+		explicit mstopwatch() = default;
 
 		/*
 		Increments elapsed time by delta_time
@@ -135,30 +133,33 @@ namespace cat
 		{
 			m_elapsed_time = 0.f;
 		}
-		/*
-		Sets elapsed time to 0 and sets duration
-		*/
-		void reset(T duration)
+
+		T elapsed() const
 		{
-			m_elapsed_time = 0.f;
-			m_duration = duration;
-		}
-		/*
-		Sets elapsed time
-		*/
-		void set(T elapsed_time)
-		{
-			m_elapsed_time = elapsed_time;
-		}
-		/*
-		Sets elapsed time and duration
-		*/
-		void set(T elapsed_time, T duration)
-		{
-			m_elapsed_time = elapsed_time;
-			m_duration = duration;
+			return m_elapsed_time;
 		}
 
+	protected:
+		T m_elapsed_time{ 0.f };
+	};
+
+	template<std::floating_point T = float>
+	class mtimer final : public mstopwatch<T>
+	{
+	public:
+		explicit mtimer(T duration)
+			: mstopwatch<T>()
+			, m_duration{ duration }
+		{ }
+
+		/*
+		Sets duration
+		*/
+		void set(T duration)
+		{
+			m_duration = duration;
+		}
+		
 		/*
 		Returns the number of times duration has elapsed and applies modulo to elapsed time using duration
 		*/
@@ -184,16 +185,9 @@ namespace cat
 			return false;
 		}
 
-		T elapsed() const
-		{
-			return m_elapsed_time;
-		}
 		T remaining() const
 		{
-			if (m_elapsed_time < m_duration)
-				return m_duration - m_elapsed_time;
-
-			return 0.f;
+			return std::max<T>(m_duration - m_elapsed_time, 0.);
 		}
 		T duration() const
 		{
@@ -210,7 +204,6 @@ namespace cat
 
 	private:
 		T m_duration;
-		T m_elapsed_time{ 0.f };
 	};
 }
 
