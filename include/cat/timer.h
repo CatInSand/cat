@@ -55,7 +55,7 @@ namespace cat
 		*/
 		int modulo_get()
 		{
-			assert(m_duration == 0.f && "timer::modulo_get() is invalid for duration 0");
+			assert(m_duration != 0.f && "timer::modulo_get() is invalid for duration 0");
 
 			int times_done{ static_cast<int>(m_elapsed_time / m_duration) };
 			m_elapsed_time -= m_duration * times_done;
