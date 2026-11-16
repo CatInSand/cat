@@ -60,7 +60,14 @@ namespace cat
 
 		float elapsed() const
 		{
-			return m_elapsed_time
+			return m_elapsed_time;
+		}
+		float remaining() const
+		{
+			if (m_elapsed_time < m_duration)
+				return m_duration - m_elapsed_time;
+
+			return 0.f;
 		}
 		float duration() const
 		{
