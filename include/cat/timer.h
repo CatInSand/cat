@@ -58,7 +58,7 @@ namespace cat
 			return false
 		}
 
-		float elapsed_time() const
+		float elapsed() const
 		{
 			return m_elapsed_time
 		}
